@@ -13,7 +13,7 @@
 - Deamon (interface) : sur chaque client permmettant le téléchargement de fragment, accessible par socket
     - > public interface Daemon extends Remote {
       >
-      >     public byte[] upLoad(String fileName, int fragmentBegin, int fragmentSize) throws Remote Exception;
+      >     public byte[] upload(String fileName, int fragmentBegin, int fragmentSize) throws Remote Exception;
       > }
     
 - Downloader (interface) : sur les clients souhaitant télécharger en parallèle des fichiers
@@ -23,10 +23,10 @@
       > }
 
 - Diary (interface) : l'annuaire, accessible par RMI, permet d'enregister les fichiers des clients connectés
-    - > public interface Diary {
+    - > public interface Diary extends Remote {
       > 
-      >     public void createFile(String fileName, String username); 
-      >     public void updateFile(String fileName, String[] userNames);
-      >     public String[] getFileUsers(String fileName);
-      >     public void deleteFileUsers(String fileName, String[] userNames);
+      >     public void createFile(String fileName, String username) throws RemoteException; 
+      >     public void updateFile(String fileName, String[] usernames) throws RemoteException;
+      >     public String[] getFileUsers(String fileName) throws Remote Exception;
+      >     public void deleteFileUsers(String fileName, String[] usernames) throws RemoteException;
       > }
