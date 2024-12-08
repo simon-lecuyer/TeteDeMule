@@ -7,22 +7,21 @@ public class DiaryImpl extends UnicastRemoteObject implements Diary {
 
     HashMap<String, ArrayList<String>> diary;
 
-    public DiaryImpl() throws RemoteException{
+    public DiaryImpl() throws RemoteException {
         diary = new HashMap<String, ArrayList<String>>();
     }
 
     @Override
-    
+
     public void addFileUsers(String fileName, String[] usernames) throws RemoteException {
-        ArrayList<String> currentUsers=diary.get(fileName);
-        if (currentUsers == null){
+        ArrayList<String> currentUsers = diary.get(fileName);
+        if (currentUsers == null) {
             ArrayList<String> newUsers = new ArrayList<String>();
             for (String user : usernames) {
                 newUsers.add(user);
             }
             diary.put(fileName, newUsers);
-        } 
-        else {
+        } else {
             for (String user : usernames) {
                 currentUsers.add(user);
             }
@@ -32,27 +31,31 @@ public class DiaryImpl extends UnicastRemoteObject implements Diary {
 
     @Override
     public void deleteFileUsers(String fileName, String[] usernames) throws RemoteException {
-        String[] currentUsers=getFileUsers(fileName);
-        ArrayList<String> delUsers = new ArrayList<>()
+        ArrayList<String> delUsers = new ArrayList<>();
         for (String user : usernames) {
             delUsers.add(user);
         }
 
-        ArrayList<String> newUsers = new ArrayList<String>();
-        for (String user : currentUsers) {
-            if(delUsers.contains(user)){
+        diary.get(fileName).removeAll(delUsers);
 
-            }
-            else {
-                newUsers.add(user);
-            }
-        }
-        return newUsers
-
-    }  
+    }
 
     @Override
     public String[] getFileUsers(String fileName) throws RemoteException {
-        return diary.get(fileName).toArray(new String[0]); 
+
+        return diary.get(fileName).toArray(new String[0]);
     }
+
+    public String getFileUsersToString(String fileName) {
+        String[] usernamesArray = diary.get(fileName).toArray(new String[0]);
+
+        String usersString = "";
+
+        for (String user : usernamesArray) {
+            usersString = user + " ; " + usersString;
+        }
+
+        return usersString;
+    }
+
 }
