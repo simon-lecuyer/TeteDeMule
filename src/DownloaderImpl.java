@@ -1,7 +1,7 @@
 import java.net.ServerSocket;
 
 
-public class LoadBalancer {
+public class DownloaderImpl implements Downloader {
 public static void main(String[] args) {
     try {
         ServerSocket ss = new ServerSocket(8080);
