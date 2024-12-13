@@ -79,5 +79,6 @@ public class DaemonImplTest {
         test.testUploadFileNotFound();
         test.testNotifyDiaryIn();
         test.testNotifyDiaryOut();
+        System.exit(0);
     }
 }
