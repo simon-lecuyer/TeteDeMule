@@ -11,6 +11,4 @@ public class UserImpl implements User {
     public String getUsername() {
         return username;
     }
-
-    
 }
