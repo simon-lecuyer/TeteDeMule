@@ -7,24 +7,24 @@ import java.util.HashMap;
 
 public class DiaryImpl extends UnicastRemoteObject implements Diary {
 
-    HashMap<String, ArrayList<String>> diary;
+    HashMap<String, ArrayList<User>> diary;
 
     public DiaryImpl() throws RemoteException {
-        diary = new HashMap<String, ArrayList<String>>();
+        diary = new HashMap<String, ArrayList<User>>();
     }
 
     @Override
 
-    public void addFileUsers(String fileName, String[] usernames) throws RemoteException {
-        ArrayList<String> currentUsers = diary.get(fileName);
+    public void addFileUsers(String fileName, ArrayList<User> users) throws RemoteException {
+        ArrayList<User> currentUsers = diary.get(fileName);
         if (currentUsers == null) {
-            ArrayList<String> newUsers = new ArrayList<String>();
-            for (String user : usernames) {
+            ArrayList<User> newUsers = new ArrayList<User>();
+            for (User user : users) {
                 newUsers.add(user);
             }
             diary.put(fileName, newUsers);
         } else {
-            for (String user : usernames) {
+            for (User user : users) {
                 currentUsers.add(user);
             }
             diary.put(fileName, currentUsers);
@@ -32,9 +32,9 @@ public class DiaryImpl extends UnicastRemoteObject implements Diary {
     }
 
     @Override
-    public void deleteFileUsers(String fileName, String[] usernames) throws RemoteException {
-        ArrayList<String> delUsers = new ArrayList<>();
-        for (String user : usernames) {
+    public void deleteFileUsers(String fileName, ArrayList<User> users) throws RemoteException {
+        ArrayList<User> delUsers = new ArrayList<>();
+        for (User user : users) {
             delUsers.add(user);
         }
 
@@ -43,9 +43,9 @@ public class DiaryImpl extends UnicastRemoteObject implements Diary {
     }
 
     @Override
-    public String[] getFileUsers(String fileName) throws RemoteException {
+    public ArrayList<User> getFileUsers(String fileName) throws RemoteException {
 
-        return diary.get(fileName).toArray(new String[0]);
+        return diary.get(fileName);
     }
 
     public String getFileUsersToString(String fileName) {
