@@ -10,13 +10,12 @@ public class DiaryImplTest {
         String computerName2 = "Ordinateur2";
 
         ArrayList<User> users1 = new ArrayList<>();
-        users1.add(new UserImpl(computerName1, new DaemonImpl()));
-        users1.add(new UserImpl(computerName2, new DaemonImpl()));
+
+        users1.add(new UserImpl(computerName1));
 
         ArrayList<User> users2 = new ArrayList<>();
-        users2.add(new UserImpl(computerName1, new DaemonImpl()));
-        users2.add(new UserImpl(computerName2, new DaemonImpl()));
-        users2.add(new UserImpl(computerName1, new DaemonImpl()));
+
+        users2.add(new UserImpl(computerName2));
 
         diary.addFileUsers("film1", users1);
         diary.addFileUsers("film2", users2);
@@ -30,11 +29,10 @@ public class DiaryImplTest {
         System.out.println("Suppression !");
 
         ArrayList<User> delUsers1 = new ArrayList<>();
-        delUsers1.add(new UserImpl(computerName1, new DaemonImpl()));
+        delUsers1.add(new UserImpl(computerName1));
 
         ArrayList<User> delUsers2 = new ArrayList<>();
-        delUsers2.add(new UserImpl(computerName1, new DaemonImpl()));
-        delUsers2.add(new UserImpl(computerName1, new DaemonImpl()));
+        delUsers2.add(new UserImpl(computerName2));
 
         diary.deleteFileUsers("film1", delUsers1);
         diary.deleteFileUsers("film2", delUsers2);
@@ -48,8 +46,8 @@ public class DiaryImplTest {
         System.out.println("Tests supplémentaires");
 
         ArrayList<User> users3 = new ArrayList<>();
-        users3.add(new UserImpl(computerName1, new DaemonImpl()));
-        users3.add(new UserImpl(computerName2, new DaemonImpl()));
+        users3.add(new UserImpl(computerName1));
+        users3.add(new UserImpl(computerName2));
 
         diary.addFileUsers("film3", users3);
 
@@ -57,7 +55,7 @@ public class DiaryImplTest {
         System.out.println(diary.getFileUsersToString("film3"));
 
         ArrayList<User> delUsers3 = new ArrayList<>();
-        delUsers3.add(new UserImpl(computerName1, new DaemonImpl()));
+        delUsers3.add(new UserImpl(computerName1));
 
         diary.deleteFileUsers("film3", delUsers3);
 
