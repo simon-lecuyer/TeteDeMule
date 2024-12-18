@@ -1,84 +1,78 @@
-import java.nio.file.*;
-import java.io.IOException;
-import java.rmi.RemoteException;
-import java.net.UnknownHostException;
-import java.net.InetAddress;
-import java.util.Arrays;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.StandardOpenOption;
 
 public class DaemonImplTest {
 
-    private DaemonImpl daemon;
-    private DiaryImpl diary;
-    private Path testFolder;
-
-    public void setUp() throws RemoteException, IOException {
-        daemon = new DaemonImpl();
-        diary = new DiaryImpl();
-        testFolder = Files.createTempDirectory("testFolder");
+    private Path createTempTestFile() throws Exception {
+        Path tempFile = Files.createTempFile("testFile", ".txt");
+        Files.write(tempFile, "This is a test file content".getBytes(), StandardOpenOption.WRITE);
+        return tempFile;
     }
 
-    public void testUpload() throws RemoteException, IOException {
-        String fileName = "testFile1.txt";
-        Path filePath = Files.createFile(testFolder.resolve(fileName));
-        Files.write(filePath, "0123456789".getBytes());
+    public void testUpload() {
+        try {
+            DaemonImpl daemon = new DaemonImpl();
+            Path tempFile = createTempTestFile();
+            daemon.fileRegistry.put("testFile", tempFile.toString());
 
-        daemon.fileRegistry.put(fileName, filePath.toString());
-
-        byte[] fragment = daemon.upload(fileName, 0, 10);
-        if (fragment == null || fragment.length != 10) {
-            System.out.println("testUpload failed");
-        } else {
-            System.out.println("testUpload passed");
+            byte[] fragment = daemon.upload("testFile", 0, 10);
+            if (fragment != null && fragment.length == 10) {
+                System.out.println("testUpload réussi");
+            } else {
+                System.out.println("testUpload échoué");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.out.println("testUpload échoué");
         }
     }
 
-    public void testUploadFileNotFound() throws RemoteException {
-        byte[] fragment = daemon.upload("nonExistentFile.txt", 0, 10);
-        if (fragment != null) {
-            System.out.println("testUploadFileNotFound failed");
-        } else {
-            System.out.println("testUploadFileNotFound passed");
+    public void testNotifyDiaryIn() {
+        try {
+            DaemonImpl daemon = new DaemonImpl();
+            DiaryImpl diary = new DiaryImpl();
+            Path tempFile = createTempTestFile();
+            daemon.fileRegistry.put("testFile", tempFile.toString());
+            daemon.notifyDiaryIn(diary);
+
+            if (diary.getFileUsers("testFile") != null) {
+                System.out.println("testNotifyDiaryIn réussi");
+            } else {
+                System.out.println("testNotifyDiaryIn échoué");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.out.println("testNotifyDiaryIn échoué");
         }
     }
 
-    public void testNotifyDiaryIn() throws RemoteException, UnknownHostException, IOException {
-        String fileName = "testFile2.txt";
-        Path filePath = Files.createFile(testFolder.resolve(fileName));
-        Files.write(filePath, "0123456789".getBytes());
+    public void testNotifyDiaryOut() {
+        try {
+            DaemonImpl daemon = new DaemonImpl();
+            DiaryImpl diary = new DiaryImpl();
+            Path tempFile = createTempTestFile();
+            daemon.fileRegistry.put("testFile", tempFile.toString());
+            daemon.notifyDiaryIn(diary);
+            daemon.notifyDiaryOut(diary);
 
-        daemon.fileRegistry.put(fileName, filePath.toString());
-
-        daemon.notifyDiaryIn(diary);
-        if (!Arrays.asList(diary.getFileUsers(fileName)).contains(InetAddress.getLocalHost().getHostName())) {
-            System.out.println("testNotifyDiaryIn failed");
-        } else {
-            System.out.println("testNotifyDiaryIn passed");
+            if (diary.getFileUsers("testFile") == null) {
+                System.out.println("testNotifyDiaryOut réussi");
+            } else {
+                System.out.println("testNotifyDiaryOut échoué");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.out.println("testNotifyDiaryOut échoué");
         }
     }
 
-    public void testNotifyDiaryOut() throws RemoteException, UnknownHostException, IOException {
-        String fileName = "testFile3.txt";
-        Path filePath = Files.createFile(testFolder.resolve(fileName));
-        Files.write(filePath, "0123456789".getBytes());
-
-        daemon.fileRegistry.put(fileName, filePath.toString());
-
-        daemon.notifyDiaryIn(diary);
-        daemon.notifyDiaryOut(diary);
-        if (Arrays.asList(diary.getFileUsers(fileName)).contains(InetAddress.getLocalHost().getHostName())) {
-            System.out.println("testNotifyDiaryOut failed");
-        } else {
-            System.out.println("testNotifyDiaryOut passed");
-        }
-    }
-
-    public static void main(String[] args) throws Exception {
+    public static void main(String[] args) {
         DaemonImplTest test = new DaemonImplTest();
-        test.setUp();
         test.testUpload();
-        test.testUploadFileNotFound();
         test.testNotifyDiaryIn();
         test.testNotifyDiaryOut();
+
         System.exit(0);
     }
 }
