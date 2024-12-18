@@ -53,9 +53,12 @@ public class DaemonImplTest {
             DiaryImpl diary = new DiaryImpl();
             Path tempFile = createTempTestFile();
             daemon.fileRegistry.put("testFile", tempFile.toString());
+            System.out.println(diary.getFileUsers("testFile"));
             daemon.notifyDiaryIn(diary);
+            System.out.println(diary.getFileUsers("testFile"));
             daemon.notifyDiaryOut(diary);
-
+            System.out.println(diary.getFileUsers("testFile"));
+            
             if (diary.getFileUsers("testFile") == null) {
                 System.out.println("testNotifyDiaryOut réussi");
             } else {
