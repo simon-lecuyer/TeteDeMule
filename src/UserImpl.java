@@ -1,4 +1,4 @@
-import java.rmi.Naming;
+
 
 public class UserImpl implements User {
     String username;

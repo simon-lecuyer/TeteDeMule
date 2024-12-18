@@ -4,15 +4,17 @@ import java.rmi.Naming;
 import java.rmi.RemoteException;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 
 public class DownloaderImpl implements Downloader {
 
-    ArrayList<Daemon> daemon;
+    HashMap<String, Daemon> daemon;
     Diary diary;
 
     public DownloaderImpl(String diaryHost) {
         try {
+            daemon = new HashMap<>();
             diary = (Diary) Naming.lookup("//" + diaryHost + "/diary");
         } catch (Exception e) {
             System.out.println("Cannot connect to diary");
@@ -25,7 +27,8 @@ public class DownloaderImpl implements Downloader {
         try {
             ArrayList<User> users = diary.getFileUsers(fileName);
             for (User user : users) {
-                user.getDaemon();
+                Daemon d = (Daemon) Naming.lookup("//" + user.getUsername() + "/daemon");
+                daemon.put(user.getUsername(), d);
             }
         } catch (RemoteException e) {
             System.out.println("No users available !");
