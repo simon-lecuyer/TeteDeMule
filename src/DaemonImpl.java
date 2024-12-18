@@ -4,6 +4,7 @@ import java.rmi.Naming;
 import java.rmi.RemoteException;
 import java.net.UnknownHostException;
 import java.rmi.server.UnicastRemoteObject;
+import java.util.ArrayList;
 import java.util.HashMap;
 
 public class DaemonImpl extends UnicastRemoteObject implements Daemon {
@@ -38,16 +39,20 @@ public class DaemonImpl extends UnicastRemoteObject implements Daemon {
 
     @Override
     public void notifyDiaryIn(Diary d) throws RemoteException, UnknownHostException { 
-        String[] username = {InetAddress.getLocalHost().getHostName()};
+        ArrayList<User> userList =  new ArrayList<>();
+        userList.add(new UserImpl(InetAddress.getLocalHost().getHostName()));
+        
         for (String fileName : fileRegistry.keySet()) {
-            d.addFileUsers(fileName, username );
+            d.addFileUsers(fileName, userList );
         }
     }
     @Override
     public void notifyDiaryOut(Diary d) throws RemoteException, UnknownHostException {
-        String[] username ={InetAddress.getLocalHost().getHostName()};
+        ArrayList<User> userList =  new ArrayList<>();
+        userList.add(new UserImpl(InetAddress.getLocalHost().getHostName()));
+        
         for (String fileName : fileRegistry.keySet()) {
-            d.deleteFileUsers(fileName, username );
+            d.deleteFileUsers(fileName, userList );
         }
     }  
     
