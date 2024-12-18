@@ -35,5 +35,6 @@ public class UserImplTest {
         test.testGetUsername();
         test.setUp();
         test.testGetDaemon();
+        System.exit(0);
     }
 }
