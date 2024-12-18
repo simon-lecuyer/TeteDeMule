@@ -1,10 +1,10 @@
+import java.rmi.Naming;
+
 public class UserImpl implements User {
     String username;
-    Daemon daemon;
 
-    public UserImpl(String username, Daemon daemon) {
+    public UserImpl(String username) {
         this.username = username;
-        this.daemon = daemon;
     }
 
     @Override
@@ -12,8 +12,5 @@ public class UserImpl implements User {
         return username;
     }
 
-    @Override
-    public Daemon getDaemon() {
-        return daemon;
-    }
+    
 }
