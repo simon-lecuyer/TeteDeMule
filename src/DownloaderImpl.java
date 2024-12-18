@@ -20,7 +20,7 @@ public class DownloaderImpl implements Downloader {
     @Override
     public void download(String host, String fileName, int fragmentSize) {
         try {
-            String[] users = diary.getFileUsers(fileName)
+            String[] users = diary.getFileUsers(fileName);
         } catch (RemoteException e) {
             System.out.println("No users available !");
         }
