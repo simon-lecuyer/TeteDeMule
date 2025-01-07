@@ -29,12 +29,14 @@ public class TeteDeMule {
             File[] files = dir.listFiles();
             for (File file : files) {
                 FileUser newFile = new FileUserImpl(file.getName(), (int)file.length());
-                diary.addFileUser(newFile, userId);
+                diary.addFileUser(newFile, user);
             }
             
             for (String file : diary.getAllFiles()) {
                 System.out.println("- " + file);
+                System.out.println(diary.getFileUsers(file));
             }
+            System.out.println("\n");
 
             Thread downloaderThread = new Thread(() -> {
                 System.out.println("Downloader Thread running.");
@@ -55,7 +57,6 @@ public class TeteDeMule {
                 }
             });
 
-            System.out.println("Begin downloaderThread");
             downloaderThread.start();
 
             while (daemonRunning) {

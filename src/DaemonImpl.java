@@ -15,6 +15,7 @@ public class DaemonImpl extends Thread implements Daemon {
     @Override
     public void run() {
         try {
+            System.out.println("Connection established");
             // I/O between client with the file and the querying user
             ObjectInputStream userIn = new ObjectInputStream(targetUserSocket.getInputStream());
             OutputStream userOut = targetUserSocket.getOutputStream();
@@ -22,7 +23,7 @@ public class DaemonImpl extends Thread implements Daemon {
             // The data to send to the querying user
             DataSend ds = (DataSendImpl)userIn.readObject();
 
-            FileInputStream fileInput = new FileInputStream("Available/"+ds.getFile().getFileName());
+            FileInputStream fileInput = new FileInputStream("../Available/"+ds.getFile().getFileName());
             
             // Read file from the offset
             fileInput.skip(ds.getOffset());
@@ -42,7 +43,7 @@ public class DaemonImpl extends Thread implements Daemon {
                 byteRead += cursor;
                 userOut.write(buffer, 0, cursor);
             }
-            System.out.println("Bytes read: " + byteRead);
+            System.out.println("Daemon : Bytes read: " + byteRead);
 
             // Close the I/O
             fileInput.close();

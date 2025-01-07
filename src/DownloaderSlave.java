@@ -18,6 +18,7 @@ public class DownloaderSlave extends Thread {
         this.targetUser = targetUser;
         this.slot = slot;
         this.totalSlots = totalSlots;
+        System.out.println("DownloaderSlave: targetUser -> " + targetUser);
     }
 
     @Override
@@ -37,11 +38,13 @@ public class DownloaderSlave extends Thread {
             int offset = slot*sizeSlot;
             DataSend ds = new DataSendImpl(file, sizeSlot, slot, offset, queryingUser);
 
+            System.out.println("DataSend to Daemon\n");
+            
             dameonOut.writeObject(ds);
-
             // Write file slot {i}
             String slotI = "{"+ slot +"}";
             String fileNameI = slotI + file.getFileName();
+            System.out.println(fileNameI);
             FileOutputStream outputFileI = new FileOutputStream("../Download/" + fileNameI);
             
             int byteRead = 0;
@@ -57,6 +60,7 @@ public class DownloaderSlave extends Thread {
             // Close I/O
             daemonSocket.close();
             outputFileI.close();
+            System.out.println("DownloaderSlave closed !");
 
         } catch (Exception e) {
             e.printStackTrace();
