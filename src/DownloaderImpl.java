@@ -1,5 +1,3 @@
-import java.net.ServerSocket;
-import java.net.Socket;
 import java.rmi.Naming;
 import java.rmi.RemoteException;
 import java.util.ArrayList;

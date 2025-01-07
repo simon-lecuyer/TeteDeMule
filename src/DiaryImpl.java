@@ -1,4 +1,5 @@
 import java.rmi.RemoteException;
+import java.rmi.registry.LocateRegistry;
 import java.rmi.server.UnicastRemoteObject;
 import java.rmi.Naming;
 import java.net.InetAddress;
@@ -63,7 +64,8 @@ public class DiaryImpl extends UnicastRemoteObject implements Diary {
     public static void main(String[] args) {
         try {
             DiaryImpl diary = new DiaryImpl();
-            Naming.rebind("//"+InetAddress.getLocalHost().getHostName()+"/daemon", diary);
+            LocateRegistry.createRegistry(2500);
+            Naming.bind("//"+InetAddress.getLocalHost().getHostName()+":2500/daemon", diary);
             System.out.println("Diary started");
         } catch (Exception e) {
             e.printStackTrace();
