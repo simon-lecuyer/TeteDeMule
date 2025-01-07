@@ -39,8 +39,8 @@ public class Slave extends Thread {
             ObjectOutputStream out;
             out = new ObjectOutputStream(ds.getOutputStream());
             
-            long downloadPointBegin =  (long) ((nbDownload-1) * floor((double) fileSize / (double)nbDownload));
-            long sizeToDownload = (long) floor((double) fileSize / (double)nbDownload);
+            long downloadPointBegin =  (long) ((nbDownload-1) * floor((double) fileSize / (double)totalDownload));
+            long sizeToDownload = (long) floor((double) fileSize / (double)totalDownload);
             
             DataSend dataSend = new DataSend(clientQuerying, fileName, sizeToDownload, downloadPointBegin);
 
