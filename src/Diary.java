@@ -4,9 +4,9 @@ import java.util.ArrayList;
 
 public interface Diary extends Remote {
 
-    public void addFileUsers(String fileName, ArrayList<User> users) throws RemoteException;
+    public void addFileUser(String fileName, String user) throws RemoteException;
 
-    public void deleteFileUsers(String fileName, ArrayList<User> users) throws RemoteException;
+    public void deleteFileUser(String fileName, String users) throws RemoteException;
 
     public ArrayList<User> getFileUsers(String fileName) throws RemoteException;
 }

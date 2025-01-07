@@ -8,27 +8,24 @@ import java.util.HashMap;
 
 public class DiaryImpl extends UnicastRemoteObject implements Diary {
 
-    HashMap<String, ArrayList<User>> diary;
+    HashMap<String, ArrayList<String>> diary;
+    ArrayList<String> connectedUsers;
 
     public DiaryImpl() throws RemoteException {
-        diary = new HashMap<String, ArrayList<User>>();
+        diary = new HashMap<String, ArrayList<String>>();
+        connectedUsers = new ArrayList<String>();
     }
 
     @Override
-
-    public void addFileUsers(String fileName, ArrayList<User> users) throws RemoteException {
-        ArrayList<User> currentUsers = diary.get(fileName);
-        if (currentUsers == null) {
-            ArrayList<User> newUsers = new ArrayList<User>();
-            for (User user : users) {
-                newUsers.add(user);
-            }
-            diary.put(fileName, newUsers);
-        } else {
-            for (User user : users) {
-                currentUsers.add(user);
-            }
-            diary.put(fileName, currentUsers);
+    public void addFileUser(String fileName, String user) throws RemoteException {
+        if (!connectedUsers.contains(user)) {
+            connectedUsers.add(user);
+            System.out.println("New user : " + user);
+        }
+        if (!diary.containsKey(fileName)) {
+            ArrayList<String> newUser = new ArrayList<>();
+            newUser.add(user);
+            diary.put(fileName, newUser);
         }
     }
 
@@ -63,10 +60,13 @@ public class DiaryImpl extends UnicastRemoteObject implements Diary {
 
     public static void main(String[] args) {
         try {
-            DiaryImpl diary = new DiaryImpl();
-            LocateRegistry.createRegistry(2500);
-            Naming.bind("//"+InetAddress.getLocalHost().getHostName()+":2500/daemon", diary);
-            System.out.println("Diary started");
+            if (args.length != 1) {
+                System.out.println("Need the diary address"); 
+            } else {
+                LocateRegistry.createRegistry(4000);
+                Naming.bind(args[0] + ":4000/diary", new DiaryImpl());
+                System.out.println("Diary on : " + args[0] + ":4000/diary");
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }
