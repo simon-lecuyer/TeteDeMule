@@ -13,8 +13,9 @@ public class DownloaderImpl implements Downloader {
     public DownloaderImpl(String queryingUser, String diaryHost) {
         try {
             this.queryingUser = queryingUser;
-            diary = (Diary) Naming.lookup(diaryHost + "/diary");
+            diary = (Diary) Naming.lookup(diaryHost);
             System.out.println("Diary found : downloader");
+            download("test.txt");
         } catch (Exception e) {
             System.out.println("Cannot connect to diary");
             e.printStackTrace();
@@ -31,7 +32,7 @@ public class DownloaderImpl implements Downloader {
             FileUser newFile = new FileUserImpl(fileName, diary.getFileSize(fileName));
             for (int i = 0; i < threadsNumber; i++) {
                 
-                th[i] = new DownloaderSlave(newFile, usersList.get(i), i, threadsNumber);
+                th[i] = new DownloaderSlave(queryingUser, newFile, usersList.get(i), i, threadsNumber);
                 th[i].start();
             }
 
@@ -67,7 +68,4 @@ public class DownloaderImpl implements Downloader {
         }
     
     }
-
-    
-
 }

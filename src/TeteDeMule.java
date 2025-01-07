@@ -36,6 +36,27 @@ public class TeteDeMule {
                 System.out.println("- " + file);
             }
 
+            Thread downloaderThread = new Thread(() -> {
+                System.out.println("Downloader Thread running.");
+                new DownloaderImpl(user, diaryName+":4000/diary");
+            });
+
+
+            Runtime.getRuntime().addShutdownHook(new Thread() {
+                @Override
+                public void run() {
+                    try {
+                        ss.close();
+                        daemonRunning = false;
+                        diary.userLeaves(user);
+                    } catch (IOException e) {
+                        throw new RuntimeException("Erreur stop daemon");
+                    }
+                }
+            });
+
+            System.out.println("Begin downloaderThread");
+            downloaderThread.start();
 
             while (daemonRunning) {
                 new DaemonImpl(ss.accept()).start();

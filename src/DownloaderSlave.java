@@ -1,20 +1,19 @@
-import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.InputStream;
-import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.io.OutputStream;
 import java.net.Socket;
 
 import static java.lang.Math.floor;
 
 public class DownloaderSlave extends Thread {
-    private String targetUser; // To who ask download
+    private String queryingUser; // Who is asking to download
+    private String targetUser; // Who respond to the download
     private FileUser file;
     private int slot; // Number of this slot
     private int totalSlots; // Total slots
 
-    public DownloaderSlave(FileUser file, String targetUser, int slot, int totalSlots) {
+    public DownloaderSlave(String queryingUser, FileUser file, String targetUser, int slot, int totalSlots) {
+        this.queryingUser = queryingUser;
         this.file = file;
         this.targetUser = targetUser;
         this.slot = slot;
@@ -36,7 +35,7 @@ public class DownloaderSlave extends Thread {
             // The data to send to the deamon
             int sizeSlot = (int) floor((double) file.getFileSize()/(double) totalSlots);
             int offset = slot*sizeSlot;
-            DataSend ds = new DataSendImpl(file, sizeSlot, slot, offset, userName);
+            DataSend ds = new DataSendImpl(file, sizeSlot, slot, offset, queryingUser);
 
             dameonOut.writeObject(ds);
 

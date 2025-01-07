@@ -14,5 +14,5 @@ public interface Diary extends Remote {
 
     public void userLeaves(String user) throws RemoteException;
 
-    public int getFileSize(String fileName);
+    public int getFileSize(String fileName) throws RemoteException;
 }
