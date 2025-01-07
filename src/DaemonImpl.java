@@ -1,68 +1,55 @@
-import java.io.RandomAccessFile;
-import java.net.InetAddress;
-import java.rmi.Naming;
+import java.io.FileInputStream;
+import java.io.ObjectInputStream;
+import java.io.OutputStream;
+import java.net.Socket;
 import java.rmi.RemoteException;
-import java.net.UnknownHostException;
-import java.rmi.server.UnicastRemoteObject;
-import java.util.ArrayList;
-import java.util.HashMap;
 
-public class DaemonImpl extends UnicastRemoteObject implements Daemon {
+public class DaemonImpl extends Thread implements Daemon {
+    private Socket targetUserSocket;
 
-    // A file is stored : name, path
-    HashMap<String, String> fileRegistry;
     
-
-    public DaemonImpl() throws RemoteException {
-        fileRegistry = new HashMap<String, String>();
-        
-    }
+    public DaemonImpl(Socket targetUserSocket) throws RemoteException {
+        this.targetUserSocket = targetUserSocket;
+    };
 
     @Override
-    public byte[] upload(String fileName, int fragmentBegin, int fragmentSize) throws RemoteException {
-        String filepath = fileRegistry.get(fileName);
-        if (filepath == null) {
-            return null;
-        }
+    public void run() {
         try {
-            RandomAccessFile file = new RandomAccessFile(filepath, "r");
-            byte[] fragment = new byte[fragmentSize];
-            file.seek(fragmentBegin);
-            file.read(fragment, 0, fragmentSize);
-            file.close();
-            return fragment;
+            // I/O between client with the file and the querying user
+            ObjectInputStream userIn = new ObjectInputStream(targetUserSocket.getInputStream());
+            OutputStream userOut = targetUserSocket.getOutputStream();
+
+            // The data to send to the querying user
+            DataSend ds = (DataSendImpl)userIn.readObject();
+
+            FileInputStream fileInput = new FileInputStream("Available/"+ds.getFile().getFileName());
+            
+            // Read file from the offset
+            fileInput.skip(ds.getOffset());
+
+            long byteRead = 0;
+            int cursor;
+            int bufferSize = 1024;
+            byte[] buffer = new byte[bufferSize];
+            while(byteRead < ds.getSizeSlot()) {
+                //* is byteRead + bufferSize bigger than the slot size allocated to be transfered
+                if (byteRead+bufferSize > ds.getSizeSlot()) {
+                    cursor = (int) (ds.getSizeSlot() - byteRead);
+                } else {
+                    //* is slot size allocated bigger than byteRead+bufferSize i.e. is better to fullfill a slot of bufferSize or ds.getSizeSlot() - byteRead
+                    cursor = bufferSize;
+                }
+                byteRead += cursor;
+                userOut.write(buffer, 0, cursor);
+            }
+            System.out.println("Bytes read: " + byteRead);
+
+            // Close the I/O
+            fileInput.close();
+            userOut.close();
+
         } catch (Exception e) {
             e.printStackTrace();
-            return null;
-        }
-    }
-
-    @Override
-    public void notifyDiaryIn(Diary d) throws RemoteException, UnknownHostException { 
-        ArrayList<User> userList =  new ArrayList<>();
-        userList.add(new UserImpl(InetAddress.getLocalHost().getHostName()));
-        
-        for (String fileName : fileRegistry.keySet()) {
-            d.addFileUsers(fileName, userList );
-        }
-    }
-    @Override
-    public void notifyDiaryOut(Diary d) throws RemoteException, UnknownHostException {
-        ArrayList<User> userList =  new ArrayList<>();
-        userList.add(new UserImpl(InetAddress.getLocalHost().getHostName()));
-        
-        for (String fileName : fileRegistry.keySet()) {
-            d.deleteFileUsers(fileName, userList );
-        }
-    }  
-    
-    public static void main(String[] args) throws RemoteException {
-        try {
-            DaemonImpl daemon = new DaemonImpl();
-            Naming.rebind("//"+InetAddress.getLocalHost().getHostName()+"/daemon", daemon);
-            System.out.println("Daemon started");
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        } 
     }
 }

@@ -22,21 +22,6 @@ public class DownloaderImpl implements Downloader {
 
     @Override
     public void download(String host, String fileName) {
-        try {
-            ArrayList<User> users = diary.getFileUsers(fileName);
-            for (User user : users) {
-                Daemon d = (Daemon) Naming.lookup("//" + user.getUsername() + "/daemon");
-                daemon.put(user.getUsername(), d);
-            }
-            
-
-        } catch (RemoteException e) {
-            System.out.println("No users available !");
-        }
-        catch (Exception e) {
-            // TODO: handle exception
-            e.printStackTrace();
-        }
     }
 
     // Regarder TD1 pour avoir le téléchargement de fragments sur plusieurs machines
