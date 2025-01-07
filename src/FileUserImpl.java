@@ -1,3 +1,5 @@
+import java.util.ArrayList;
+
 public class FileUserImpl implements FileUser{
     private String name;
     private int size;
@@ -17,4 +19,16 @@ public class FileUserImpl implements FileUser{
     public String getFileName() {
         return this.name;
     }
+
+    @Override
+    public FileUser getFileFromName(ArrayList<FileUser> filesList, String name) {
+        for (FileUser file : filesList) {
+            if (file.getFileName().equals(name)) {
+                return file;
+            }
+        }
+        //! Normally should not happen
+        return null;
+    }
+
 }
