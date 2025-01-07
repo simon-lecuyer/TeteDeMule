@@ -19,14 +19,18 @@ public class DiaryImpl extends UnicastRemoteObject implements Diary {
     public void addFileUsers(String fileName, ArrayList<User> users) throws RemoteException {
         ArrayList<User> currentUsers = diary.get(fileName);
         if (currentUsers == null) {
+            System.out.println("New file : " + fileName);
             ArrayList<User> newUsers = new ArrayList<User>();
             for (User user : users) {
                 newUsers.add(user);
             }
             diary.put(fileName, newUsers);
         } else {
+            System.out.println("New user for : " + fileName);
             for (User user : users) {
+                if (!currentUsers.contains(user)){
                 currentUsers.add(user);
+                }
             }
             diary.put(fileName, currentUsers);
         }
@@ -36,12 +40,13 @@ public class DiaryImpl extends UnicastRemoteObject implements Diary {
     public void deleteFileUsers(String fileName, ArrayList<User> users) throws RemoteException {
         ArrayList<User> delUsers = new ArrayList<>();
         for (User user : users) {
+            System.out.println("User : " + user + " has left");
             delUsers.add(user);
         }
 
         diary.get(fileName).removeAll(delUsers);
-
     }
+
 
     @Override
     public ArrayList<User> getFileUsers(String fileName) throws RemoteException {

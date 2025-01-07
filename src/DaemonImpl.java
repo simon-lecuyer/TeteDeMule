@@ -2,6 +2,7 @@ import java.io.RandomAccessFile;
 import java.net.InetAddress;
 import java.rmi.Naming;
 import java.rmi.RemoteException;
+import java.rmi.registry.LocateRegistry;
 import java.net.UnknownHostException;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.ArrayList;
@@ -58,8 +59,10 @@ public class DaemonImpl extends UnicastRemoteObject implements Daemon {
     
     public static void main(String[] args) throws RemoteException {
         try {
+            
             DaemonImpl daemon = new DaemonImpl();
-            Naming.rebind("//"+InetAddress.getLocalHost().getHostName()+"/daemon", daemon);
+            LocateRegistry.createRegistry(5000);
+            Naming.bind("//"+InetAddress.getLocalHost().getHostName()+":5000/daemon", daemon);
             System.out.println("Daemon started");
         } catch (Exception e) {
             e.printStackTrace();
