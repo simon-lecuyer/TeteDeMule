@@ -98,6 +98,12 @@ public class DiaryImpl extends UnicastRemoteObject implements Diary {
         }
     }
 
+    @Override
+    public int getFileSize(String fileName) {
+        FileUser dummy = new FileUserImpl("Dummy", 0);
+        return dummy.getFileFromName(fileInfo, fileName).getFileSize();
+    }
+
     public static void main(String[] args) {
         try {
             if (args.length != 1) {

@@ -9,5 +9,5 @@ public interface DataSend extends Serializable{
 
     public String getTargetUser(); 
 
-    public long getOffset();
+    public int getOffset();
 }

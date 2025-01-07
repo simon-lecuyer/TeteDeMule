@@ -4,12 +4,14 @@ public class DataSendImpl implements DataSend {
     private FileUser file;
     private int sizeSlot;
     private int slot;
+    private int offset;
     private String targetUser;
     
-    public DataSendImpl(FileUser file, int sizeSlot, int slot, String targetUser) {
+    public DataSendImpl(FileUser file, int sizeSlot, int slot, int offset, String targetUser) {
         this.file = file;
         this.sizeSlot = sizeSlot;
         this.slot = slot;
+        this.offset = offset;
         this.targetUser = targetUser;
     }
 
@@ -34,7 +36,7 @@ public class DataSendImpl implements DataSend {
     }
 
     @Override
-    public long getOffset() {
-        return (long) sizeSlot*slot;
+    public int getOffset() {
+        return this.offset;
     }
 }

@@ -13,4 +13,6 @@ public interface Diary extends Remote {
     public ArrayList<String> getAllFiles() throws RemoteException;
 
     public void userLeaves(String user) throws RemoteException;
+
+    public int getFileSize(String fileName);
 }
