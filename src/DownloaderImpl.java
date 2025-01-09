@@ -1,3 +1,4 @@
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.nio.file.Files;
@@ -66,6 +67,8 @@ public class DownloaderImpl implements Downloader {
                 }
                 
                 fileInputI.close();
+                File fileInputIdel = new File("../Download/" + slotI + fileName );
+                fileInputIdel.delete();
             }
             outputFile.close();
             System.out.println("End recomposed file");
