@@ -59,7 +59,6 @@ public class DownloaderImpl implements Downloader {
                 int bufferSize = 1024;
                 byte[] buffer = new byte[bufferSize];
                 while(byteRead < slotSize) {
-                    // maybe 512 need to change
                     cursor = fileInputI.read(buffer, 0, bufferSize);
 
                     byteRead += cursor;
@@ -68,7 +67,9 @@ public class DownloaderImpl implements Downloader {
                 
                 fileInputI.close();
                 File fileInputIdel = new File("../Download/" + slotI + fileName );
-                fileInputIdel.delete();
+                if (fileInputIdel.delete()) {
+                    System.out.println("File : " + slotI + fileName +" deleted");
+                }
             }
             outputFile.close();
             System.out.println("End recomposed file");
