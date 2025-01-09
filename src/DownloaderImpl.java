@@ -36,8 +36,8 @@ public class DownloaderImpl implements Downloader {
                 th[i].start();
             }
 
-            for (int i = 0; i < th.length; i++) {
-                th[i].join();
+            for (Thread th1 : th) {
+                th1.join();
             }
 
             System.out.println("Going to sleep...");

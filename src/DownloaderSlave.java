@@ -1,9 +1,8 @@
 import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.io.ObjectOutputStream;
-import java.net.Socket;
-
 import static java.lang.Math.floor;
+import java.net.Socket;
 
 public class DownloaderSlave extends Thread {
     private String queryingUser; // Who is asking to download
@@ -35,7 +34,9 @@ public class DownloaderSlave extends Thread {
 
             // The data to send to the deamon
             int sizeSlot = (int) floor((double) file.getFileSize()/(double) totalSlots);
+            System.out.println("File size : " + sizeSlot);
             int offset = slot*sizeSlot;
+            System.out.println("offset : " + offset);
             DataSend ds = new DataSendImpl(file, sizeSlot, slot, offset, queryingUser);
 
             System.out.println("DataSend to Daemon\n");
