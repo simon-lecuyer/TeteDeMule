@@ -59,7 +59,7 @@ public class DownloaderImpl implements Downloader {
                 byte[] buffer = new byte[bufferSize];
                 while(byteRead < slotSize) {
                     // maybe 512 need to change
-                    cursor = fileInputI.read(buffer, 0, 512);
+                    cursor = fileInputI.read(buffer, 0, bufferSize);
 
                     byteRead += cursor;
                     outputFile.write(buffer, 0, cursor);

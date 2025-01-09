@@ -25,14 +25,18 @@ public class DaemonImpl extends Thread implements Daemon {
 
             FileInputStream fileInput = new FileInputStream("../Available/"+ds.getFile().getFileName());
             
+            System.out.println("Data Send offset : " + ds.getOffset());
             // Read file from the offset
             fileInput.skip(ds.getOffset());
+
+            System.out.println("Data Send taille segment : " + ds.getSizeSlot());
 
             long byteRead = 0;
             int cursor;
             int bufferSize = 1024;
             byte[] buffer = new byte[bufferSize];
             while(byteRead < ds.getSizeSlot()) {
+                fileInput.read(buffer, 0, bufferSize);
                 //* is byteRead + bufferSize bigger than the slot size allocated to be transfered
                 if (byteRead+bufferSize > ds.getSizeSlot()) {
                     cursor = (int) (ds.getSizeSlot() - byteRead);
@@ -41,9 +45,9 @@ public class DaemonImpl extends Thread implements Daemon {
                     cursor = bufferSize;
                 }
                 byteRead += cursor;
-                userOut.write(buffer, ds.getOffset(), cursor);
+                userOut.write(buffer, 0, cursor);
             }
-            System.out.println("Daemon : Bytes read: " + byteRead);
+            System.out.println("Daemon : Bytes send: " + byteRead);
 
             // Close the I/O
             fileInput.close();
