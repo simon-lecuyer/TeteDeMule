@@ -15,7 +15,7 @@ public class DownloaderImpl implements Downloader {
             this.queryingUser = queryingUser;
             diary = (Diary) Naming.lookup(diaryHost);
             System.out.println("Diary found : downloader");
-            download("test.txt");
+            download("projet.pdf");
         } catch (Exception e) {
             System.out.println("Cannot connect to diary");
             e.printStackTrace();
