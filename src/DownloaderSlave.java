@@ -52,7 +52,7 @@ public class DownloaderSlave extends Thread {
             int bufferSize = 1024;
             byte[] buffer = new byte[bufferSize];
             while (byteRead != -1) {
-                byteRead = daemonIn.read(buffer, offset, 1024);
+                byteRead = daemonIn.read(buffer, 0, 1024);
                 if (byteRead != -1) {
                     outputFileI.write(buffer, 0, byteRead);
                 }

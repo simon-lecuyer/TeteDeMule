@@ -41,7 +41,7 @@ public class DaemonImpl extends Thread implements Daemon {
                     cursor = bufferSize;
                 }
                 byteRead += cursor;
-                userOut.write(buffer, 0, cursor);
+                userOut.write(buffer, ds.getOffset(), cursor);
             }
             System.out.println("Daemon : Bytes read: " + byteRead);
 
