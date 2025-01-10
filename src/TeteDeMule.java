@@ -79,7 +79,7 @@ public class TeteDeMule {
         System.out.println("Entrez  votre ID :");
         String userId = sc.nextLine();
 
-        System.out.println("Entrez le nom du carnet de notes :");
+        System.out.println("Entrez le nom du diary :");
         String diaryName = sc.nextLine();
        
         Diary diary = null;
@@ -87,14 +87,14 @@ public class TeteDeMule {
             diary = (Diary)Naming.lookup(diaryName+":4000/diary");
             System.out.println("Carnet de notes trouvé");
         } catch (Exception e) {
-            System.out.println("Impossible de trouver le carnet de notes");
+            System.out.println("Impossible de trouver le diary");
             System.out.println("Voulez-vous réessayer ? (O/N)");
             String response = sc.nextLine();
             if (response.equals("N")){
                 System.exit(0);
             }
             else{
-                System.out.println("Entrez le nom du carnet de notes :");
+                System.out.println("Entrez le nom du diary :");
                 diaryName = sc.nextLine();
             }
         }
@@ -128,7 +128,6 @@ public class TeteDeMule {
 
         final ServerSocket ssFinal = ss;
 
-        sc.close();
 
         boolean TeteDeMuleRunning = true;
 
@@ -139,17 +138,16 @@ public class TeteDeMule {
             System.out.println("3. Ajouter un dossier à la liste des fichiers disponibles");
             System.out.println("4. Quitter");
 
-            Scanner sc2 = new Scanner(System.in);
-            String option = sc2.nextLine();
+            String option = sc.nextLine();
             if (option.equals("1")) {
                 ListFiles(diaryFinal);
             } else if (option.equals("2")) {
                 System.out.println("Entrez le nom du fichier à télécharger :");
-                String fileName = sc2.nextLine();
+                String fileName = sc.nextLine();
                 DownloadFile(fileName, diaryFinal, user, ssFinal, diaryNameFinal);
             } else if (option.equals("3")) {
                 System.out.println("Entrez le chemin du dossier à ajouter :");
-                String pathname = sc2.nextLine();
+                String pathname = sc.nextLine();
                 AddFiles(pathname, diaryFinal, user, diaryNameFinal);
             } else if (option.equals("4")) {
                 TeteDeMuleRunning = false;
@@ -158,7 +156,7 @@ public class TeteDeMule {
                     daemonRunning = false;
                     diaryFinal.userLeaves(user);
                     TeteDeMuleRunning = false;
-                    sc2.close();
+                    sc.close();
                 } catch (IOException e) {
                     throw new RuntimeException("Erreur stop daemon");
                 }
