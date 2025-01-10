@@ -19,7 +19,7 @@ public class TeteDeMule {
             
             ServerSocket ss = new ServerSocket(serverPort);
 
-            //! Add the user and its files available
+            //% Add the user and its files available
             File dir = new File("../Available");
             File[] files = dir.listFiles();
             for (File file : files) {
@@ -27,18 +27,20 @@ public class TeteDeMule {
                 diary.addFileUser(newFile, user);
             }
             
+            //% Print all the files available to download
             for (String file : diary.getAllFiles()) {
                 System.out.println("- " + file);
                 System.out.println(diary.getFileUsers(file));
             }
             System.out.println("\n");
 
+            //% The main thread for the client to download, see all files, ...
             Thread runDownloader = new Thread(() -> {
                 System.out.println("Downloader Thread running");
                 new DownloaderImpl(user, diaryName+":4000/diary");
             });
 
-
+            //% When the user disconnect, to leave the diary
             Runtime.getRuntime().addShutdownHook(new Thread() {
                 @Override
                 public void run() {

@@ -11,6 +11,11 @@ public class DownloaderImpl implements Downloader {
     private String queryingUser;
     private Diary diary;
 
+    /** Create the downloader for the client
+     * 
+     * @param queryingUser the user querying a download
+     * @param diaryHost the name of the diary
+     */
     public DownloaderImpl(String queryingUser, String diaryHost) {
         try {
             this.queryingUser = queryingUser;
@@ -23,14 +28,20 @@ public class DownloaderImpl implements Downloader {
         }
     }
 
+    
+    /** Main method to download the file
+     * 
+     * @param fileName name of the file to download
+     */
     @Override
     public void download(String fileName) {
         try {
+            //% Get the users registered to a file
             ArrayList<String> usersList= diary.getFileUsers(fileName);
             int threadsNumber = usersList.size(); 
             Thread th[] = new DownloaderSlave[threadsNumber];
 
-            // Create download directory if it does not exist
+            //% Create download directory if it does not exist
             File downloadDir = new File("../Download");
             if (!downloadDir.exists()) {
                 if (downloadDir.mkdirs()) {
@@ -42,27 +53,24 @@ public class DownloaderImpl implements Downloader {
 
             System.out.println("\n");
 
+            //% Create a FileUser to ask the users to send with thread
             FileUser newFile = new FileUserImpl(fileName, diary.getFileSize(fileName));
             for (int i = 0; i < threadsNumber; i++) {
-                // System.out.println("Thread : "+i);
                 th[i] = new DownloaderSlave(queryingUser, newFile, usersList.get(i), i, threadsNumber);
                 th[i].start();
             }
 
+            //% Wait all the thread to finish
             for (Thread th1 : th) {
                 th1.join();
             }
 
-            // System.out.println("Going to sleep...");
-            // Thread.sleep(4000);
-            // System.out.println("Wake up !");
-
-            // Recomposed file
+    
+            //% Recompose the file with all the fragments
             FileOutputStream outputFile = new FileOutputStream("../Download/" + fileName);
             for (int i = 0; i < threadsNumber; i++) {
-                //System.out.println("i = "+i);
+                //% Recompose the fragment {i} file in the outputFile
                 String slotI = "{"+i+"}";
-                //Recomposed slot {i} file
                 FileInputStream fileInputI = new FileInputStream("../Download/" + slotI + fileName );
                 long slotSize = Files.size(Paths.get("../Download/" + slotI + fileName ));
 
@@ -78,13 +86,15 @@ public class DownloaderImpl implements Downloader {
                 }
                 
                 fileInputI.close();
+                
+                //% Delete the partial file {i}
                 File fileInputIdel = new File("../Download/" + slotI + fileName );
                 if (fileInputIdel.delete()) {
                     System.out.println("Partial file : " + slotI + fileName +" deleted");
                 }
             }
             outputFile.close();
-            System.out.println("End recomposed file");
+            System.out.println("End recomposed  : " + fileName);
 
         } catch (Exception e) {
             e.printStackTrace();

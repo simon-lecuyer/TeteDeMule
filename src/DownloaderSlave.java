@@ -42,6 +42,7 @@ public class DownloaderSlave extends Thread {
             System.out.println("DataSend to Daemon\n");
             
             dameonOut.writeObject(ds);
+            
             // Write file slot {i}
             String slotI = "{"+ slot +"}";
             String fileNameI = slotI + file.getFileName();
