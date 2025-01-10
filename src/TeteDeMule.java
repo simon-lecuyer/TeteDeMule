@@ -175,6 +175,19 @@ public class TeteDeMule {
                 System.out.println("Option invalide");
         }
     }
+    Runtime.getRuntime().addShutdownHook(new Thread() {
+        @Override
+        public void run() {
+            try {
+                ssFinal.close();
+                daemonRunning = false;
+                diaryFinal.userLeaves(user);
+            } catch (IOException e) {
+                throw new RuntimeException("Erreur stop daemon");
+            }
+        }
+    });
+
     System.exit(0);
     }
 }
