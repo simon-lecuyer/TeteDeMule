@@ -1,7 +1,7 @@
+import java.rmi.Naming;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.server.UnicastRemoteObject;
-import java.rmi.Naming;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -12,9 +12,9 @@ public class DiaryImpl extends UnicastRemoteObject implements Diary {
     ArrayList<FileUser> fileInfo;
 
     public DiaryImpl() throws RemoteException {
-        diary = new HashMap<String, ArrayList<String>>();
-        connectedUsers = new ArrayList<String>();
-        fileInfo = new ArrayList<FileUser>();
+        this.diary = new HashMap<>();
+        connectedUsers = new ArrayList<>();
+        fileInfo = new ArrayList<>();
     }
 
     @Override
@@ -77,6 +77,7 @@ public class DiaryImpl extends UnicastRemoteObject implements Diary {
         return allFiles;
     }
 
+    @Override
     public void userLeaves(String user) throws RemoteException {
         connectedUsers.remove(user);
         System.out.println("User  : " + user + " has left");
@@ -113,7 +114,10 @@ public class DiaryImpl extends UnicastRemoteObject implements Diary {
                 Naming.bind(args[0] + ":4000/diary", new DiaryImpl());
                 System.out.println("Diary on : " + args[0] + ":4000/diary");
             }
-        } catch (Exception e) {
+        } catch (RemoteException e) {
+            System.out.println("Cannot connect to diary : " + args[0] + ":4000/diary");
+        } 
+        catch (Exception e) {
             e.printStackTrace();
         }
     }
