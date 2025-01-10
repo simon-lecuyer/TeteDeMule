@@ -3,14 +3,6 @@ import java.io.ObjectInputStream;
 import java.io.OutputStream;
 import java.net.Socket;
 import java.rmi.RemoteException;
-<<<<<<< HEAD
-import java.rmi.registry.LocateRegistry;
-import java.net.UnknownHostException;
-import java.rmi.server.UnicastRemoteObject;
-import java.util.ArrayList;
-import java.util.HashMap;
-=======
->>>>>>> old-state
 
 public class DaemonImpl extends Thread implements Daemon {
     private Socket targetUserSocket;
@@ -63,42 +55,6 @@ public class DaemonImpl extends Thread implements Daemon {
 
         } catch (Exception e) {
             e.printStackTrace();
-<<<<<<< HEAD
-            return null;
-        }
-    }
-
-    @Override
-    public void notifyDiaryIn(Diary d) throws RemoteException, UnknownHostException { 
-        ArrayList<User> userList =  new ArrayList<>();
-        userList.add(new UserImpl(InetAddress.getLocalHost().getHostName()));
-        
-        for (String fileName : fileRegistry.keySet()) {
-            d.addFileUsers(fileName, userList );
-        }
-    }
-    @Override
-    public void notifyDiaryOut(Diary d) throws RemoteException, UnknownHostException {
-        ArrayList<User> userList =  new ArrayList<>();
-        userList.add(new UserImpl(InetAddress.getLocalHost().getHostName()));
-        
-        for (String fileName : fileRegistry.keySet()) {
-            d.deleteFileUsers(fileName, userList );
-        }
-    }  
-    
-    public static void main(String[] args) throws RemoteException {
-        try {
-            
-            DaemonImpl daemon = new DaemonImpl();
-            LocateRegistry.createRegistry(5000);
-            Naming.bind("//"+InetAddress.getLocalHost().getHostName()+":5000/daemon", daemon);
-            System.out.println("Daemon started");
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-=======
         } 
->>>>>>> old-state
     }
 }

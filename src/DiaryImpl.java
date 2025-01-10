@@ -18,16 +18,6 @@ public class DiaryImpl extends UnicastRemoteObject implements Diary {
     }
 
     @Override
-<<<<<<< HEAD
-
-    public void addFileUsers(String fileName, ArrayList<User> users) throws RemoteException {
-        ArrayList<User> currentUsers = diary.get(fileName);
-        if (currentUsers == null) {
-            System.out.println("New file : " + fileName);
-            ArrayList<User> newUsers = new ArrayList<User>();
-            for (User user : users) {
-                newUsers.add(user);
-=======
     public void addFileUser(FileUser file, String user) throws RemoteException {
         if (!connectedUsers.contains(user)) {
             connectedUsers.add(user);
@@ -43,7 +33,6 @@ public class DiaryImpl extends UnicastRemoteObject implements Diary {
             ArrayList<String> users = diary.get(file.getFileName());
             if (!users.contains(user)) {
                 users.add(user);
->>>>>>> old-state
             }
             diary.put(file.getFileName(), users);
         }
@@ -57,38 +46,12 @@ public class DiaryImpl extends UnicastRemoteObject implements Diary {
             diary.remove(file.getFileName());
             fileInfo.remove(file);
         } else {
-<<<<<<< HEAD
-            System.out.println("New user for : " + fileName);
-            for (User user : users) {
-                if (!currentUsers.contains(user)){
-                currentUsers.add(user);
-                }
-            }
-            diary.put(fileName, currentUsers);
-=======
             diary.put(file.getFileName(), remainingUsers);
->>>>>>> old-state
         }
     }
 
     @Override
-<<<<<<< HEAD
-    public void deleteFileUsers(String fileName, ArrayList<User> users) throws RemoteException {
-        ArrayList<User> delUsers = new ArrayList<>();
-        for (User user : users) {
-            System.out.println("User : " + user + " has left");
-            delUsers.add(user);
-        }
-
-        diary.get(fileName).removeAll(delUsers);
-    }
-
-
-    @Override
-    public ArrayList<User> getFileUsers(String fileName) throws RemoteException {
-=======
     public ArrayList<String> getFileUsers(String fileName) throws RemoteException {
->>>>>>> old-state
 
         return diary.get(fileName);
     }
