@@ -8,26 +8,33 @@ import java.rmi.RemoteException;
 public class DaemonImpl extends Thread implements Daemon {
     private Socket targetUserSocket;
 
-    
+    /** Create the daemon for the client available 
+     * 
+     * @param targetUserSocket socket of the client available
+     * @throws RemoteException
+     */
     public DaemonImpl(Socket targetUserSocket) throws RemoteException {
         this.targetUserSocket = targetUserSocket;
     };
 
+    /** Method called with thread in TeteDeMule with new DaemonImpl(ss.accept()).start()
+     * 
+     */
     @Override
     public void run() {
         try {
             System.out.println("Connection established with : " + targetUserSocket.getInetAddress().getHostName() + "\n");
-            // I/O between client with the file and the querying user
+            //% I/O between this client with the file and the querying user
             ObjectInputStream userIn = new ObjectInputStream(targetUserSocket.getInputStream());
             OutputStream userOut = targetUserSocket.getOutputStream();
 
-            // The data to send to the querying user
+            //% The data send from the querying user
             DataSend ds = (DataSendImpl)userIn.readObject();
 
             FileInputStream fileInput = new FileInputStream("../Available/"+ds.getFile().getFileName());
             
             System.out.println("Data Send offset : " + ds.getOffset());
-            // Read file from the offset
+            //% Read file from the offset
             fileInput.skip(ds.getOffset());
 
             System.out.println("Data Send segment size : " + ds.getSizeSlot());

@@ -1,4 +1,5 @@
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.ObjectOutputStream;
 import static java.lang.Math.floor;
@@ -11,6 +12,14 @@ public class DownloaderSlave extends Thread {
     private int slot; // Number of this slot
     private int totalSlots; // Total slots
 
+    /** The downloader of the partial file using thread
+     * 
+     * @param queryingUser user requesting the download
+     * @param file FileUser to dowload the slot
+     * @param targetUser user to download from
+     * @param slot fragment size
+     * @param totalSlots all the fragments needed
+     */
     public DownloaderSlave(String queryingUser, FileUser file, String targetUser, int slot, int totalSlots) {
         this.queryingUser = queryingUser;
         this.file = file;
@@ -20,6 +29,9 @@ public class DownloaderSlave extends Thread {
         System.out.println("DownloaderSlave: targetUser -> " + targetUser);
     }
 
+    /** The method to run when calling  th[i].start() in DownloaderImpl
+     * 
+     */
     @Override
     public void run() {
         String[] userInfo = targetUser.split(":");
@@ -28,11 +40,11 @@ public class DownloaderSlave extends Thread {
         try {
             Socket daemonSocket = new Socket(userName, userPort);
 
-            // I/O stream
+            //% I/O stream
             InputStream daemonIn = daemonSocket.getInputStream();
             ObjectOutputStream dameonOut = new ObjectOutputStream(daemonSocket.getOutputStream());
 
-            // The data to send to the deamon
+            //% The data to send to the deamon
             int sizeSlot = (int) floor((double) file.getFileSize()/(double) totalSlots);
             System.out.println("File size : " + sizeSlot);
             int offset = slot*sizeSlot;
@@ -43,7 +55,7 @@ public class DownloaderSlave extends Thread {
             
             dameonOut.writeObject(ds);
             
-            // Write file slot {i}
+            //% Write in the file {slot}fileName
             String slotI = "{"+ slot +"}";
             String fileNameI = slotI + file.getFileName();
             System.out.println("Partial file created : " + fileNameI);
@@ -59,11 +71,13 @@ public class DownloaderSlave extends Thread {
                 }
             }
 
-            // Close I/O
+            //% Close I/O
             daemonSocket.close();
             outputFileI.close();
             System.out.println("DownloaderSlave closed !\n");
 
+        } catch (IOException e) {
+            System.out.println("IOException occured : " + e.getMessage());
         } catch (Exception e) {
             e.printStackTrace();
         }
