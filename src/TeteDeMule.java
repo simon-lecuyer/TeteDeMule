@@ -106,8 +106,6 @@ public class TeteDeMule {
             Files.createDirectory(Paths.get("../Available"));
         }
 
-        AddFiles("../Available", diary, userId, diaryName);
-
         final String diaryNameFinal = diaryName;
         final Diary diaryFinal = diary;
 
@@ -139,6 +137,7 @@ public class TeteDeMule {
 
         final ServerSocket ssFinal = ss;
 
+        AddFiles("../Available", diary, user, diaryName);
 
         boolean TeteDeMuleRunning = true;
 

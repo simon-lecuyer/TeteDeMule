@@ -22,6 +22,7 @@ public class DownloaderSlave extends Thread {
 
     @Override
     public void run() {
+        System.out.println(targetUser);
         String[] userInfo = targetUser.split(":");
         String userName = userInfo[0];
         int userPort = Integer.parseInt(userInfo[1]);
