@@ -2,19 +2,23 @@ import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.server.UnicastRemoteObject;
 import java.rmi.Naming;
-import java.net.InetAddress;
 import java.util.ArrayList;
 import java.util.HashMap;
 
 public class DiaryImpl extends UnicastRemoteObject implements Diary {
 
-    HashMap<String, ArrayList<User>> diary;
+    HashMap<String, ArrayList<String>> diary;
+    ArrayList<String> connectedUsers;
+    ArrayList<FileUser> fileInfo;
 
     public DiaryImpl() throws RemoteException {
-        diary = new HashMap<String, ArrayList<User>>();
+        diary = new HashMap<String, ArrayList<String>>();
+        connectedUsers = new ArrayList<String>();
+        fileInfo = new ArrayList<FileUser>();
     }
 
     @Override
+<<<<<<< HEAD
 
     public void addFileUsers(String fileName, ArrayList<User> users) throws RemoteException {
         ArrayList<User> currentUsers = diary.get(fileName);
@@ -23,9 +27,37 @@ public class DiaryImpl extends UnicastRemoteObject implements Diary {
             ArrayList<User> newUsers = new ArrayList<User>();
             for (User user : users) {
                 newUsers.add(user);
+=======
+    public void addFileUser(FileUser file, String user) throws RemoteException {
+        if (!connectedUsers.contains(user)) {
+            connectedUsers.add(user);
+            System.out.println("New user : " + user);
+        }
+        if (!diary.containsKey(file.getFileName())) {
+            ArrayList<String> newUser = new ArrayList<>();
+            newUser.add(user);
+            fileInfo.add(file);
+            diary.put(file.getFileName(), newUser);
+        } 
+        else {
+            ArrayList<String> users = diary.get(file.getFileName());
+            if (!users.contains(user)) {
+                users.add(user);
+>>>>>>> old-state
             }
-            diary.put(fileName, newUsers);
+            diary.put(file.getFileName(), users);
+        }
+    }
+
+    @Override
+    public void deleteFileUser(FileUser file, String user)  throws RemoteException {
+        ArrayList<String> remainingUsers = diary.get(file.getFileName());
+        remainingUsers.remove(user);
+        if (remainingUsers.isEmpty()) {
+            diary.remove(file.getFileName());
+            fileInfo.remove(file);
         } else {
+<<<<<<< HEAD
             System.out.println("New user for : " + fileName);
             for (User user : users) {
                 if (!currentUsers.contains(user)){
@@ -33,10 +65,14 @@ public class DiaryImpl extends UnicastRemoteObject implements Diary {
                 }
             }
             diary.put(fileName, currentUsers);
+=======
+            diary.put(file.getFileName(), remainingUsers);
+>>>>>>> old-state
         }
     }
 
     @Override
+<<<<<<< HEAD
     public void deleteFileUsers(String fileName, ArrayList<User> users) throws RemoteException {
         ArrayList<User> delUsers = new ArrayList<>();
         for (User user : users) {
@@ -50,6 +86,9 @@ public class DiaryImpl extends UnicastRemoteObject implements Diary {
 
     @Override
     public ArrayList<User> getFileUsers(String fileName) throws RemoteException {
+=======
+    public ArrayList<String> getFileUsers(String fileName) throws RemoteException {
+>>>>>>> old-state
 
         return diary.get(fileName);
     }
@@ -66,12 +105,51 @@ public class DiaryImpl extends UnicastRemoteObject implements Diary {
         return usersString;
     }
 
+    @Override
+    public ArrayList<String> getAllFiles() throws RemoteException {
+        ArrayList<String> allFiles = new ArrayList<>();
+        for (String file : diary.keySet()) {
+            allFiles.add(file);
+        }
+        return allFiles;
+    }
+
+    public void userLeaves(String user) throws RemoteException {
+        connectedUsers.remove(user);
+        System.out.println("User  : " + user + " has left");
+
+        ArrayList<String> toRemove = new ArrayList<>();
+        for (String filename : diary.keySet()) {
+            ArrayList<String> users = diary.get(filename);
+            users.remove(user);
+            if (users.isEmpty()) {
+                toRemove.add(filename);
+            } else {
+                diary.put(filename, users);
+            }
+        }
+        for (String filename : toRemove) {
+            diary.remove(filename);
+            FileUser dummy = new FileUserImpl("Dummy", 0);
+            fileInfo.remove(dummy.getFileFromName(fileInfo, filename));
+        }
+    }
+
+    @Override
+    public int getFileSize(String fileName) throws RemoteException {
+        FileUser dummy = new FileUserImpl("Dummy", 0);
+        return dummy.getFileFromName(fileInfo, fileName).getFileSize();
+    }
+
     public static void main(String[] args) {
         try {
-            DiaryImpl diary = new DiaryImpl();
-            LocateRegistry.createRegistry(2500);
-            Naming.bind("//"+InetAddress.getLocalHost().getHostName()+":2500/daemon", diary);
-            System.out.println("Diary started");
+            if (args.length != 1) {
+                System.out.println("Need the diary address"); 
+            } else {
+                LocateRegistry.createRegistry(4000);
+                Naming.bind(args[0] + ":4000/diary", new DiaryImpl());
+                System.out.println("Diary on : " + args[0] + ":4000/diary");
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }
