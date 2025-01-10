@@ -2,8 +2,6 @@
 import java.io.File;
 import java.io.IOException;
 import java.net.ServerSocket;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.rmi.Naming;
 
 public class TeteDeMule {
@@ -14,7 +12,7 @@ public class TeteDeMule {
             String userId = args[0];
             String diaryName = args[1];
             Diary diary = (Diary)Naming.lookup(diaryName+":4000/diary");
-            System.out.println("diary found");
+            System.out.println("Diary found : " + diaryName +":4000/diary");
 
             int serverPort = Integer.parseInt(args[2]);
             String user = userId + ":" + serverPort;
@@ -35,8 +33,8 @@ public class TeteDeMule {
             }
             System.out.println("\n");
 
-            Thread downloaderThread = new Thread(() -> {
-                System.out.println("Downloader Thread running.");
+            Thread runDownloader = new Thread(() -> {
+                System.out.println("Downloader Thread running");
                 new DownloaderImpl(user, diaryName+":4000/diary");
             });
 
@@ -49,12 +47,12 @@ public class TeteDeMule {
                         daemonRunning = false;
                         diary.userLeaves(user);
                     } catch (IOException e) {
-                        throw new RuntimeException("Erreur stop daemon");
+                        throw new RuntimeException("Stop Daemon error : " + e.getMessage());
                     }
                 }
             });
 
-            downloaderThread.start();
+            runDownloader.start();
 
             while (daemonRunning) {
                 new DaemonImpl(ss.accept()).start();

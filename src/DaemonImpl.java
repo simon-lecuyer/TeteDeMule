@@ -1,4 +1,5 @@
 import java.io.FileInputStream;
+import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.OutputStream;
 import java.net.Socket;
@@ -15,7 +16,7 @@ public class DaemonImpl extends Thread implements Daemon {
     @Override
     public void run() {
         try {
-            System.out.println("Connection established");
+            System.out.println("Connection established with : " + targetUserSocket.getInetAddress().getHostName() + "\n");
             // I/O between client with the file and the querying user
             ObjectInputStream userIn = new ObjectInputStream(targetUserSocket.getInputStream());
             OutputStream userOut = targetUserSocket.getOutputStream();
@@ -29,7 +30,7 @@ public class DaemonImpl extends Thread implements Daemon {
             // Read file from the offset
             fileInput.skip(ds.getOffset());
 
-            System.out.println("Data Send taille segment : " + ds.getSizeSlot());
+            System.out.println("Data Send segment size : " + ds.getSizeSlot());
 
             long byteRead = 0;
             int cursor;
@@ -47,13 +48,16 @@ public class DaemonImpl extends Thread implements Daemon {
                 byteRead += cursor;
                 userOut.write(buffer, 0, cursor);
             }
-            System.out.println("Daemon : Bytes send: " + byteRead);
+            System.out.println("Daemon : Bytes send: " + byteRead + "\n");
 
             // Close the I/O
             fileInput.close();
             userOut.close();
 
-        } catch (Exception e) {
+        } catch (IOException e) {
+            System.out.println("IOException occured : " + e.getMessage());
+        } 
+        catch (Exception e) {
             e.printStackTrace();
         } 
     }

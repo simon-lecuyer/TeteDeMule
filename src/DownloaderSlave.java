@@ -45,7 +45,7 @@ public class DownloaderSlave extends Thread {
             // Write file slot {i}
             String slotI = "{"+ slot +"}";
             String fileNameI = slotI + file.getFileName();
-            System.out.println(fileNameI);
+            System.out.println("Partial file created : " + fileNameI);
             FileOutputStream outputFileI = new FileOutputStream("../Download/" + fileNameI);
             
             int byteRead = 0;
@@ -61,7 +61,7 @@ public class DownloaderSlave extends Thread {
             // Close I/O
             daemonSocket.close();
             outputFileI.close();
-            System.out.println("DownloaderSlave closed !");
+            System.out.println("DownloaderSlave closed !\n");
 
         } catch (Exception e) {
             e.printStackTrace();

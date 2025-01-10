@@ -15,7 +15,7 @@ public class DownloaderImpl implements Downloader {
         try {
             this.queryingUser = queryingUser;
             diary = (Diary) Naming.lookup(diaryHost);
-            System.out.println("Diary found : downloader");
+            System.out.println("Diary found : Downloader");
             download("projet.pdf");
         } catch (Exception e) {
             System.out.println("Cannot connect to diary");
@@ -34,15 +34,17 @@ public class DownloaderImpl implements Downloader {
             File downloadDir = new File("../Download");
             if (!downloadDir.exists()) {
                 if (downloadDir.mkdirs()) {
-                    System.out.println("Download directory created.");
+                    System.out.println("Download directory created : " + downloadDir.getName());
                 } else {
                     System.out.println("Failed to create download directory.");
                 }
             }
 
+            System.out.println("\n");
+
             FileUser newFile = new FileUserImpl(fileName, diary.getFileSize(fileName));
             for (int i = 0; i < threadsNumber; i++) {
-                System.out.println("Thread : "+i);
+                // System.out.println("Thread : "+i);
                 th[i] = new DownloaderSlave(queryingUser, newFile, usersList.get(i), i, threadsNumber);
                 th[i].start();
             }
@@ -51,14 +53,14 @@ public class DownloaderImpl implements Downloader {
                 th1.join();
             }
 
-            System.out.println("Going to sleep...");
-            Thread.sleep(4000);
-            System.out.println("Wake up !");
+            // System.out.println("Going to sleep...");
+            // Thread.sleep(4000);
+            // System.out.println("Wake up !");
 
             // Recomposed file
             FileOutputStream outputFile = new FileOutputStream("../Download/" + fileName);
             for (int i = 0; i < threadsNumber; i++) {
-                System.out.println("i = "+i);
+                //System.out.println("i = "+i);
                 String slotI = "{"+i+"}";
                 //Recomposed slot {i} file
                 FileInputStream fileInputI = new FileInputStream("../Download/" + slotI + fileName );
@@ -78,7 +80,7 @@ public class DownloaderImpl implements Downloader {
                 fileInputI.close();
                 File fileInputIdel = new File("../Download/" + slotI + fileName );
                 if (fileInputIdel.delete()) {
-                    System.out.println("File : " + slotI + fileName +" deleted");
+                    System.out.println("Partial file : " + slotI + fileName +" deleted");
                 }
             }
             outputFile.close();
