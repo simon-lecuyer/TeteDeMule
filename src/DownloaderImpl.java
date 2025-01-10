@@ -30,6 +30,16 @@ public class DownloaderImpl implements Downloader {
             int threadsNumber = usersList.size(); 
             Thread th[] = new DownloaderSlave[threadsNumber];
 
+            // Create download directory if it does not exist
+            File downloadDir = new File("../Download");
+            if (!downloadDir.exists()) {
+                if (downloadDir.mkdirs()) {
+                    System.out.println("Download directory created.");
+                } else {
+                    System.out.println("Failed to create download directory.");
+                }
+            }
+
             FileUser newFile = new FileUserImpl(fileName, diary.getFileSize(fileName));
             for (int i = 0; i < threadsNumber; i++) {
                 System.out.println("Thread : "+i);
