@@ -2,6 +2,8 @@
 import java.io.File;
 import java.io.IOException;
 import java.net.ServerSocket;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.rmi.Naming;
 import java.util.Scanner;
 
@@ -81,6 +83,7 @@ public class TeteDeMule {
 
         System.out.println("Entrez le nom du diary :");
         String diaryName = sc.nextLine();
+
        
         Diary diary = null;
         try {
@@ -99,8 +102,16 @@ public class TeteDeMule {
             }
         }
 
+        if (Files.notExists(Paths.get("../Available"))) {
+            Files.createDirectory(Paths.get("../Available"));
+        }
+
+        AddFiles("../Available", diary, userId, diaryName);
+
         final String diaryNameFinal = diaryName;
         final Diary diaryFinal = diary;
+
+        
 
         System.out.println("Entrez le port du serveur :");
 
