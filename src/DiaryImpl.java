@@ -114,19 +114,20 @@ public class DiaryImpl extends UnicastRemoteObject implements Diary {
         System.out.println("Entrez votre adresse pour démarrer le carnet de Tête de Mule :");
         Scanner sc = new Scanner(System.in);
         String address = sc.nextLine();
-        Boolean DiaryOn = true;
-        while (DiaryOn){
+        Boolean diaryNotInitialized = true;
+        while (diaryNotInitialized) {
             try {
                 System.out.println("Initialisation du carnet de Tête de Mule...");
                 LocateRegistry.createRegistry(4000);
                 Naming.bind(address + ":4000/diary", new DiaryImpl());
                 System.out.println("Carnet de Tête de Mule sur : " + address + ":4000/diary");
+                diaryNotInitialized = false;
             } catch (RemoteException e) {
                 System.out.println("Impossible de se connecter au carnet de Tête de Mule : " + address + ":4000/diary");
                 System.out.println("Voulez-vous réessayer ? (O/N)");
                 String response = sc.nextLine();
                 if (response.equals("N")){
-                    DiaryOn = false;
+                    System.exit(0);
                 }
                 else{
                     System.out.println("Entrez votre adresse pour démarrer le carnet de Tête de Mule :");
@@ -138,7 +139,7 @@ public class DiaryImpl extends UnicastRemoteObject implements Diary {
                 System.out.println("Voulez-vous réessayer ? (O/N)");
                 String response = sc.nextLine();
                 if (response.equals("N")){
-                    DiaryOn = false;
+                    System.exit(0);
                 }
                 else{
                     System.out.println("Entrez votre adresse pour démarrer le carnet de Tête de Mule :");
