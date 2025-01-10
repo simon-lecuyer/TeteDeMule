@@ -150,9 +150,8 @@ public class DiaryImpl extends UnicastRemoteObject implements Diary {
                 e.printStackTrace();
             }
         }
+
         sc.close();
-        System.out.println("Fermeture du carnet de Tête de Mule...");
-        System.exit(0);
 
     }
 
