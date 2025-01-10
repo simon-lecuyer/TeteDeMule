@@ -1,9 +1,11 @@
+import java.net.MalformedURLException;
 import java.rmi.Naming;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Scanner;
 
 public class DiaryImpl extends UnicastRemoteObject implements Diary {
 
@@ -106,19 +108,69 @@ public class DiaryImpl extends UnicastRemoteObject implements Diary {
     }
 
     public static void main(String[] args) {
-        try {
-            if (args.length != 1) {
-                System.out.println("Need the diary address"); 
-            } else {
+        System.out.println("========================================");
+        System.out.println("Bienvenue dans le Carnet de Tête de Mule");
+        System.out.println("========================================");
+        System.out.println("Entrez votre adresse pour démarrer le carnet de Tête de Mule :");
+        Scanner sc = new Scanner(System.in);
+        String address = sc.nextLine();
+        Boolean DiaryOn = true;
+        while (DiaryOn){
+            try {
+                System.out.println("Initialisation du carnet de Tête de Mule...");
                 LocateRegistry.createRegistry(4000);
-                Naming.bind(args[0] + ":4000/diary", new DiaryImpl());
-                System.out.println("Diary on : " + args[0] + ":4000/diary");
+                Naming.bind(address + ":4000/diary", new DiaryImpl());
+                System.out.println("Carnet de Tête de Mule sur : " + address + ":4000/diary");
+            } catch (RemoteException e) {
+                System.out.println("Impossible de se connecter au carnet de Tête de Mule : " + address + ":4000/diary");
+                System.out.println("Voulez-vous réessayer ? (O/N)");
+                String response = sc.nextLine();
+                if (response.equals("N")){
+                    DiaryOn = false;
+                }
+                else{
+                    System.out.println("Entrez votre adresse pour démarrer le carnet de Tête de Mule :");
+                    address = sc.nextLine();
+                }
+            } 
+            catch (MalformedURLException e) {
+                System.out.println("Ceci n'est pas une syntaxe valide d'adresse : " + address + ":4000/diary");
+                System.out.println("Voulez-vous réessayer ? (O/N)");
+                String response = sc.nextLine();
+                if (response.equals("N")){
+                    DiaryOn = false;
+                }
+                else{
+                    System.out.println("Entrez votre adresse pour démarrer le carnet de Tête de Mule :");
+                    address = sc.nextLine();
+                }
             }
-        } catch (RemoteException e) {
-            System.out.println("Cannot connect to diary : " + args[0] + ":4000/diary");
-        } 
-        catch (Exception e) {
-            e.printStackTrace();
+            catch (Exception e) {
+                e.printStackTrace();
+            }
         }
+        sc.close();
+        System.out.println("Fermeture du carnet de Tête de Mule...");
+        System.exit(0);
+
     }
+
+//     public static void main(String[] args) {
+//         try {
+//             if (args.length != 1) {
+//                 System.out.println("Need the diary address"); 
+//             } else {
+//                 LocateRegistry.createRegistry(4000);
+//                 Naming.bind(args[0] + ":4000/diary", new DiaryImpl());
+//                 System.out.println("Diary on : " + args[0] + ":4000/diary");
+//             }
+//         } catch (RemoteException e) {
+//             System.out.println("Cannot connect to diary : " + args[0] + ":4000/diary");
+//         } 
+//         catch (Exception e) {
+//             e.printStackTrace();
+//         }
+//     }
+// }
+
 }

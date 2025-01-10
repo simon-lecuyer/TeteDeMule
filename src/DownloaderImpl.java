@@ -11,12 +11,12 @@ public class DownloaderImpl implements Downloader {
     private String queryingUser;
     private Diary diary;
 
-    public DownloaderImpl(String queryingUser, String diaryHost) {
+    public DownloaderImpl(String queryingUser, String diaryHost, String filename) {
         try {
             this.queryingUser = queryingUser;
             diary = (Diary) Naming.lookup(diaryHost);
             System.out.println("Diary found : downloader");
-            download("projet.pdf");
+            download(filename);
         } catch (Exception e) {
             System.out.println("Cannot connect to diary");
             e.printStackTrace();
