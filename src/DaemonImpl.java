@@ -57,7 +57,7 @@ public class DaemonImpl extends Thread implements Daemon {
             }
             System.out.println("Daemon : Bytes send: " + byteRead + "\n");
 
-            // Close the I/O
+            //% Close the I/O
             fileInput.close();
             userOut.close();
 

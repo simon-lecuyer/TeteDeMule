@@ -7,6 +7,14 @@ public class DataSendImpl implements DataSend {
     private int offset;
     private String targetUser;
     
+    /** Construct the Data to parse between the Downloader and Daemon
+     * 
+     * @param file
+     * @param sizeSlot
+     * @param slot
+     * @param offset
+     * @param targetUser
+     */
     public DataSendImpl(FileUser file, int sizeSlot, int slot, int offset, String targetUser) {
         this.file = file;
         this.sizeSlot = sizeSlot;
