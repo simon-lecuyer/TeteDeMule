@@ -5,6 +5,7 @@ import java.net.ServerSocket;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.rmi.Naming;
+import java.util.ArrayList;
 import java.util.Scanner;
 
 public class TeteDeMule {
@@ -184,7 +185,17 @@ public class TeteDeMule {
             } else if (option.equals("2")) {
                 System.out.println("Entrez le nom du fichier à télécharger :");
                 String fileName = sc.nextLine();
-                DownloadFile(fileName, diaryFinal, user, ssFinal, diaryNameFinal);
+                ArrayList<String> allFiles = diaryFinal.getAllFiles();
+                if (allFiles != null){
+                    if (allFiles.contains(fileName)){
+                        DownloadFile(fileName, diaryFinal, user, ssFinal, diaryNameFinal);
+                    } else{
+                        System.out.println("Erreur, le Diary ne contient pas le fichier : " + fileName + "\n");
+                    } 
+                } else{
+                    System.out.println("Aucun fichier dans le Diary, impossible de télécharger\n");
+                } 
+                
             } else if (option.equals("3")) {
                 System.out.println("Entrez le chemin du dossier à ajouter :");
                 String pathname = sc.nextLine();
