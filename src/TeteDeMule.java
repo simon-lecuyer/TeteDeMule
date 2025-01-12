@@ -60,7 +60,7 @@ public class TeteDeMule {
 
         Thread downloaderThread = new Thread(() -> {
             System.out.println("Downloader Thread running.");
-            new DownloaderImpl(user, diaryName+":4000/diary",fileName);
+            new DownloaderImpl(user, "//"+diaryName+":4000/diary",fileName);
         });
 
 
@@ -109,7 +109,7 @@ public class TeteDeMule {
        
         Diary diary = null;
         try {
-            diary = (Diary)Naming.lookup(diaryName+":4000/diary");
+            diary = (Diary)Naming.lookup("//" + diaryName+":4000/diary");
             System.out.println("Carnet de notes trouvé");
         } catch (Exception e) {
             System.out.println("Impossible de trouver le diary");

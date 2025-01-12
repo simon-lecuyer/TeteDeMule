@@ -117,25 +117,27 @@ public class DiaryImpl extends UnicastRemoteObject implements Diary {
         Boolean diaryNotInitialized = true;
         while (diaryNotInitialized) {
             try {
-                System.out.println("Initialisation du de Tête de Mule...");
+                
+                System.out.println("Initialisation du diary de Tête de Mule...");
                 LocateRegistry.createRegistry(4000);
-                Naming.bind(address + ":4000/diary", new DiaryImpl());
-                System.out.println("Annuaire de Tête de Mule sur : " + address + ":4000/diary");
+                Naming.rebind("//"+address + ":4000/diary", new DiaryImpl());
+                System.out.println("Annuaire de Tête de Mule sur : //" + address + ":4000/diary");
                 diaryNotInitialized = false;
             } catch (RemoteException e) {
-                System.out.println("Impossible de se connecter à l'annuaire de Tête de Mule : " + address + ":4000/diary");
+                System.out.println("Impossible de créer l'annuaire de Tête de Mule : //" + address + ":4000/diary");
                 System.out.println("Voulez-vous réessayer ? (O/N)");
                 String response = sc.nextLine();
                 if (response.equals("N")){
                     System.exit(0);
                 }
                 else{
+                    
                     System.out.println("Entrez votre adresse pour démarrer l'annuaire de Tête de Mule :");
                     address = sc.nextLine();
                 }
             } 
             catch (MalformedURLException e) {
-                System.out.println("Ceci n'est pas une syntaxe valide d'adresse : " + address + ":4000/diary");
+                System.out.println("Ceci n'est pas une syntaxe valide d'adresse : //" + address + ":4000/diary");
                 System.out.println("Voulez-vous réessayer ? (O/N)");
                 String response = sc.nextLine();
                 if (response.equals("N")){
@@ -154,23 +156,5 @@ public class DiaryImpl extends UnicastRemoteObject implements Diary {
         sc.close();
 
     }
-
-//     public static void main(String[] args) {
-//         try {
-//             if (args.length != 1) {
-//                 System.out.println("Need the diary address"); 
-//             } else {
-//                 LocateRegistry.createRegistry(4000);
-//                 Naming.bind(args[0] + ":4000/diary", new DiaryImpl());
-//                 System.out.println("Diary on : " + args[0] + ":4000/diary");
-//             }
-//         } catch (RemoteException e) {
-//             System.out.println("Cannot connect to diary : " + args[0] + ":4000/diary");
-//         } 
-//         catch (Exception e) {
-//             e.printStackTrace();
-//         }
-//     }
-// }
 
 }
