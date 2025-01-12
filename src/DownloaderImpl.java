@@ -51,10 +51,6 @@ public class DownloaderImpl implements Downloader {
                 th1.join();
             }
 
-            System.out.println("Going to sleep...");
-            Thread.sleep(4000);
-            System.out.println("Wake up !");
-
             // Recomposed file
             FileOutputStream outputFile = new FileOutputStream("../Download/" + fileName);
             for (int i = 0; i < threadsNumber; i++) {

@@ -59,11 +59,14 @@ public class TeteDeMule {
         });
 
         downloaderThread.start();
-
         while (daemonRunning) {
-            try{ new DaemonImpl(ss.accept()).start();
-            } catch (IOException e) {
-                e.printStackTrace();
+            try {
+            DaemonImpl daemon = new DaemonImpl(ss.accept());
+            daemon.start();
+            daemon.join(); // Wait for the daemon thread to finish
+            daemonRunning = false; // Stop the loop after the download is finished
+            } catch (IOException | InterruptedException e) {
+            e.printStackTrace();
             }
         }
     } 
@@ -141,14 +144,23 @@ public class TeteDeMule {
 
         boolean TeteDeMuleRunning = true;
 
+        System.out.println("Bienvenue dans Tête de Mule, " + userId + " !");
+
+
         while (TeteDeMuleRunning) {
+            System.out.println("=========================================");
             System.out.println("Voici vos options :");
             System.out.println("1. Voir les fichiers disponibles");
             System.out.println("2. Télécharger un fichier");
             System.out.println("3. Ajouter un dossier à la liste des fichiers disponibles");
             System.out.println("4. Quitter");
+            System.out.println("=========================================");
+            System.out.println("Entrez le numéro de l'option choisie :");
 
             String option = sc.nextLine();
+
+            System.out.println("=========================================");
+
             if (option.equals("1")) {
                 ListFiles(diaryFinal);
             } else if (option.equals("2")) {

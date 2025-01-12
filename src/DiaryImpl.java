@@ -108,29 +108,29 @@ public class DiaryImpl extends UnicastRemoteObject implements Diary {
     }
 
     public static void main(String[] args) {
-        System.out.println("========================================");
-        System.out.println("Bienvenue dans le Carnet de Tête de Mule");
-        System.out.println("========================================");
-        System.out.println("Entrez votre adresse pour démarrer le carnet de Tête de Mule :");
+        System.out.println("=========================================");
+        System.out.println("Bienvenue dans l'annuaire de Tête de Mule");
+        System.out.println("=========================================");
+        System.out.println("Entrez votre adresse pour démarrer l'annuaire de Tête de Mule :");
         Scanner sc = new Scanner(System.in);
         String address = sc.nextLine();
         Boolean diaryNotInitialized = true;
         while (diaryNotInitialized) {
             try {
-                System.out.println("Initialisation du carnet de Tête de Mule...");
+                System.out.println("Initialisation du de Tête de Mule...");
                 LocateRegistry.createRegistry(4000);
                 Naming.bind(address + ":4000/diary", new DiaryImpl());
-                System.out.println("Carnet de Tête de Mule sur : " + address + ":4000/diary");
+                System.out.println("Annuaire de Tête de Mule sur : " + address + ":4000/diary");
                 diaryNotInitialized = false;
             } catch (RemoteException e) {
-                System.out.println("Impossible de se connecter au carnet de Tête de Mule : " + address + ":4000/diary");
+                System.out.println("Impossible de se connecter à l'annuaire de Tête de Mule : " + address + ":4000/diary");
                 System.out.println("Voulez-vous réessayer ? (O/N)");
                 String response = sc.nextLine();
                 if (response.equals("N")){
                     System.exit(0);
                 }
                 else{
-                    System.out.println("Entrez votre adresse pour démarrer le carnet de Tête de Mule :");
+                    System.out.println("Entrez votre adresse pour démarrer l'annuaire de Tête de Mule :");
                     address = sc.nextLine();
                 }
             } 
@@ -142,7 +142,7 @@ public class DiaryImpl extends UnicastRemoteObject implements Diary {
                     System.exit(0);
                 }
                 else{
-                    System.out.println("Entrez votre adresse pour démarrer le carnet de Tête de Mule :");
+                    System.out.println("Entrez votre adresse pour démarrer l' annuaire de Tête de Mule :");
                     address = sc.nextLine();
                 }
             }
