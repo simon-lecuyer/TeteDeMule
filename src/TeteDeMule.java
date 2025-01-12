@@ -10,6 +10,10 @@ import java.util.Scanner;
 public class TeteDeMule {
     private static boolean daemonRunning = true;
 
+    /** To list the files available from the diary with its users
+     * 
+     * @param diary the diary
+     */
     static void ListFiles (Diary diary) {
         try {
             for (String file : diary.getAllFiles()) {
@@ -23,7 +27,13 @@ public class TeteDeMule {
 
     }
 
-    static void AddFiles (String pathname, Diary diary, String user, String diaryName) {
+    /** Add all files to the diary from the directory pathname
+     * 
+     * @param pathname the path to directory
+     * @param diary the diary to add the files
+     * @param user the name of the user
+     */
+    static void AddFiles (String pathname, Diary diary, String user) {
 
         try {
             File dir = new File(pathname);
@@ -37,6 +47,14 @@ public class TeteDeMule {
         }
     }
 
+    /** Method to start a download with threads
+     * 
+     * @param fileName the file to download
+     * @param diary th diary
+     * @param user the name of the user querying the file
+     * @param ss the socket of the user
+     * @param diaryName the name of the diary
+     */
     static void DownloadFile (String fileName, Diary diary, String user, ServerSocket ss, String diaryName) {
 
         Thread downloaderThread = new Thread(() -> {
@@ -140,7 +158,7 @@ public class TeteDeMule {
 
         final ServerSocket ssFinal = ss;
 
-        AddFiles("../Available", diary, user, diaryName);
+        AddFiles("../Available", diary, user);
 
         boolean TeteDeMuleRunning = true;
 
@@ -170,7 +188,7 @@ public class TeteDeMule {
             } else if (option.equals("3")) {
                 System.out.println("Entrez le chemin du dossier à ajouter :");
                 String pathname = sc.nextLine();
-                AddFiles(pathname, diaryFinal, user, diaryNameFinal);
+                AddFiles(pathname, diaryFinal, user);
             } else if (option.equals("4")) {
                 TeteDeMuleRunning = false;
                 try {
