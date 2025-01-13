@@ -4,6 +4,7 @@ import java.io.InputStream;
 import java.io.ObjectOutputStream;
 import static java.lang.Math.floor;
 import java.net.Socket;
+import java.util.zip.InflaterInputStream;
 
 public class DownloaderSlave extends Thread {
     private String queryingUser; // Who is asking to download
@@ -41,7 +42,9 @@ public class DownloaderSlave extends Thread {
             Socket daemonSocket = new Socket(userName, userPort);
 
             //% I/O stream
-            InputStream daemonIn = daemonSocket.getInputStream();
+            InputStream daemonInC = daemonSocket.getInputStream();
+            InflaterInputStream daemonIn = new InflaterInputStream(daemonInC);
+
             ObjectOutputStream dameonOut = new ObjectOutputStream(daemonSocket.getOutputStream());
 
             //% The data to send to the deamon
