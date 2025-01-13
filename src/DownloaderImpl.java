@@ -139,6 +139,8 @@ public class DownloaderImpl implements Downloader {
             File[] files = dir.listFiles();
             if (files.length > 0) {
                 for (File file : files) {
+                    //% Move the file to the folder ../Available to be upload with daemon later
+                    file.renameTo(new File("../Available/"+file.getName()));
                     FileUser newFile = new FileUserImpl(file.getName(), (int)file.length());
                     diary.addFileUser(newFile, user);
                     System.out.println("Fichier ajouté : " + file.getName() + "\n");

@@ -77,10 +77,10 @@ public class DownloaderSlave extends Thread {
             //% Close I/O
             daemonSocket.close();
             outputFileI.close();
-            System.out.println("DownloaderSlave closed !\n");
+            System.out.println("DownloaderSlave" + slot +"closed !\n");
 
         } catch (IOException e) {
-            System.out.println("IOException occured : " + e.getMessage());
+            System.out.println("IOException occured in downloaderSlave: " + e.getMessage());
         } catch (Exception e) {
             e.printStackTrace();
         }

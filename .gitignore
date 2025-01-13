@@ -1,2 +1,4 @@
 /bin/*.class
 *.DS_Store
+/Available/*.mp4
+/Download/*.mp4
