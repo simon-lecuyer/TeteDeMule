@@ -94,7 +94,7 @@ public class DownloaderImpl implements Downloader {
                 }
             }
             outputFile.close();
-            System.out.println("End recomposed  : " + fileName);
+            System.out.println("End recomposed  : " + fileName + "\n");
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -131,10 +131,16 @@ public class DownloaderImpl implements Downloader {
         try {
             File dir = new File(pathname);
             File[] files = dir.listFiles();
-            for (File file : files) {
-                FileUser newFile = new FileUserImpl(file.getName(), (int)file.length());
-                diary.addFileUser(newFile, user);
+            if (files.length > 0) {
+                for (File file : files) {
+                    FileUser newFile = new FileUserImpl(file.getName(), (int)file.length());
+                    diary.addFileUser(newFile, user);
+                    System.out.println("Fichier ajouté : " + file.getName() + "\n");
+                }
+            } else {
+                System.out.println("Pas de fichier à ajouter pour le dossier : " + pathname);
             }
+            
         } catch (Exception e) {
             System.out.println("Impossible d'ajouter les fichiers");
         }
@@ -159,7 +165,7 @@ public class DownloaderImpl implements Downloader {
 
                 String option = sc.nextLine();
 
-                System.out.println("=========================================");
+                System.out.println("=========================================\n");
 
                 if (option.equals("1")) {
                     ListFiles(diary);
@@ -180,6 +186,7 @@ public class DownloaderImpl implements Downloader {
                 } else if (option.equals("3")) {
                     System.out.println("Entrez le chemin du dossier à ajouter :");
                     String pathname = sc.nextLine();
+                    System.out.println("\n");
                     AddFiles(pathname, diary, queryingUser);
                 } else if (option.equals("4")) {
                     TeteDeMule.daemonRunning = false;
