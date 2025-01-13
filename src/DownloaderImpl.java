@@ -36,6 +36,7 @@ public class DownloaderImpl implements Downloader {
     @Override
     public void download(String fileName) {
         try {
+            long timeStart = System.currentTimeMillis();
             //% Get the users registered to a file
             ArrayList<String> usersList= diary.getFileUsers(fileName);
             int threadsNumber = usersList.size(); 
@@ -64,7 +65,7 @@ public class DownloaderImpl implements Downloader {
             for (Thread th1 : th) {
                 th1.join();
             }
-
+            long timeAllFragments = System.currentTimeMillis();
     
             //% Recompose the file with all the fragments
             FileOutputStream outputFile = new FileOutputStream("../Download/" + fileName);
@@ -94,7 +95,11 @@ public class DownloaderImpl implements Downloader {
                 }
             }
             outputFile.close();
+            long timeEnd = System.currentTimeMillis();
+            
             System.out.println("End recomposed  : " + fileName + "\n");
+            System.out.println("Time needed to download: " + ( timeEnd - timeStart) + "ms\n");
+            System.out.println("Time to get all partial files : " + (timeEnd - timeAllFragments) + "ms\n");
 
         } catch (Exception e) {
             e.printStackTrace();
