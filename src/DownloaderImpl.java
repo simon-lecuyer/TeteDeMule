@@ -3,8 +3,9 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.rmi.Naming;
 import java.util.ArrayList;
+import java.util.Scanner;
+
 
 
 public class DownloaderImpl implements Downloader {
@@ -16,12 +17,11 @@ public class DownloaderImpl implements Downloader {
      * @param queryingUser the user querying a download
      * @param diaryHost the name of the diary
      */
-    public DownloaderImpl(String queryingUser, String diaryHost) {
+    public DownloaderImpl(String queryingUser, Diary diaryHost) {
         try {
             this.queryingUser = queryingUser;
-            diary = (Diary) Naming.lookup(diaryHost);
-            System.out.println("Diary found : Downloader");
-            download("projet.pdf");
+            this.diary = diaryHost;
+            displayDownload();
         } catch (Exception e) {
             System.out.println("Cannot connect to diary");
             e.printStackTrace();
@@ -100,5 +100,99 @@ public class DownloaderImpl implements Downloader {
             e.printStackTrace();
         }
     
+    }
+
+
+    /** To list the files available from the diary with its users
+     * 
+     * @param diary the diary
+     */
+    private void ListFiles (Diary diary) {
+        try {
+            for (String file : diary.getAllFiles()) {
+                System.out.println("- " + file + " : " + diary.getFileSize(file) + " bytes" +(diary.getFileUsers(file).size() > 0 ? " - " + diary.getFileUsers(file).size() + " users" : ""));
+                System.out.println(diary.getFileUsers(file));
+            }
+            System.out.println("\n");
+        } catch (Exception e) {
+            System.out.println("Impossible de lister les fichiers");
+        }
+
+    }
+
+    /** Add all files to the diary from the directory pathname
+     * 
+     * @param pathname the path to directory
+     * @param diary the diary to add the files
+     * @param user the name of the user
+     */
+    private void AddFiles (String pathname, Diary diary, String user) {
+
+        try {
+            File dir = new File(pathname);
+            File[] files = dir.listFiles();
+            for (File file : files) {
+                FileUser newFile = new FileUserImpl(file.getName(), (int)file.length());
+                diary.addFileUser(newFile, user);
+            }
+        } catch (Exception e) {
+            System.out.println("Impossible d'ajouter les fichiers");
+        }
+    }
+
+
+    public void displayDownload() {
+
+        System.out.println("Bienvenue dans Tête de Mule, " + queryingUser + " !");
+        
+        Scanner sc = new Scanner(System.in);
+        try {
+            while (TeteDeMule.daemonRunning) {
+                System.out.println("=========================================");
+                System.out.println("Voici vos options :");
+                System.out.println("1. Voir les fichiers disponibles");
+                System.out.println("2. Télécharger un fichier");
+                System.out.println("3. Ajouter un dossier à la liste des fichiers disponibles");
+                System.out.println("4. Quitter");
+                System.out.println("=========================================");
+                System.out.println("Entrez le numéro de l'option choisie :");
+
+                String option = sc.nextLine();
+
+                System.out.println("=========================================");
+
+                if (option.equals("1")) {
+                    ListFiles(diary);
+                } else if (option.equals("2")) {
+                    System.out.println("Entrez le nom du fichier à télécharger :");
+                    String fileName = sc.nextLine();
+                    ArrayList<String> allFiles = diary.getAllFiles();
+                    if (allFiles != null){
+                        if (allFiles.contains(fileName)){
+                            download(fileName);
+                        } else{
+                            System.out.println("Erreur, le Diary ne contient pas le fichier : " + fileName + "\n");
+                        } 
+                    } else{
+                        System.out.println("Aucun fichier dans le Diary, impossible de télécharger\n");
+                    } 
+                    
+                } else if (option.equals("3")) {
+                    System.out.println("Entrez le chemin du dossier à ajouter :");
+                    String pathname = sc.nextLine();
+                    AddFiles(pathname, diary, queryingUser);
+                } else if (option.equals("4")) {
+                    TeteDeMule.daemonRunning = false;
+                    
+                    System.exit(0);
+                } else {
+                    System.out.println("Option invalide");
+                }
+            } 
+            
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        sc.close();
     }
 }
