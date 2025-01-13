@@ -4,6 +4,7 @@ import java.io.ObjectInputStream;
 import java.io.OutputStream;
 import java.net.Socket;
 import java.rmi.RemoteException;
+import java.util.zip.DeflaterOutputStream;
 
 public class DaemonImpl extends Thread implements Daemon {
     private Socket targetUserSocket;
@@ -26,7 +27,9 @@ public class DaemonImpl extends Thread implements Daemon {
             System.out.println("Connection established with : " + targetUserSocket.getInetAddress().getHostName() + "\n");
             //% I/O between this client with the file and the querying user
             ObjectInputStream userIn = new ObjectInputStream(targetUserSocket.getInputStream());
-            OutputStream userOut = targetUserSocket.getOutputStream();
+            OutputStream userOutC = targetUserSocket.getOutputStream();
+
+            DeflaterOutputStream userOut = new DeflaterOutputStream(userOutC);
 
             //% The data send from the querying user
             DataSend ds = (DataSendImpl)userIn.readObject();
