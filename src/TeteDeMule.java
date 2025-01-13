@@ -1,6 +1,7 @@
 
 import java.io.File;
 import java.io.IOException;
+import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -45,6 +46,8 @@ public class TeteDeMule {
 
             System.out.println("Entrez  votre ID :");
             String userId = sc.nextLine();
+
+            userId = InetAddress.getLocalHost().getHostName();
 
 
             System.out.println("Entrez le nom du diary :");

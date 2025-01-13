@@ -3,6 +3,7 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -151,6 +152,25 @@ public class DownloaderImpl implements Downloader {
         }
     }
 
+    private void DeleteFile(String fileName, Diary diary, String user) {
+        try {
+            ArrayList<String> allFiles = diary.getAllFiles();
+            if (allFiles.contains(fileName)) {
+                if (diary.getFileUsers(fileName).contains(user)) {
+                    FileUser file = new FileUserImpl(fileName, diary.getFileSize(fileName));
+                    diary.deleteFileUser(file, fileName);
+                    System.out.println("Fichier supprimé : " + fileName);
+                } else {
+                    System.out.println("Vous n'avez pas ce fichier à disposition d'envoi");
+                }
+            } else {
+                System.out.println("Le fichier : " + fileName + "n'est pas dans la liste des fichiers disponibles à télécharger, donc supprimer");
+            }
+        } catch (RemoteException e) {
+            System.out.println("Erreur de suppression de fichier");
+        } 
+    }
+
 
     public void displayDownload() {
 
@@ -164,7 +184,8 @@ public class DownloaderImpl implements Downloader {
                 System.out.println("1. Voir les fichiers disponibles");
                 System.out.println("2. Télécharger un fichier");
                 System.out.println("3. Ajouter un dossier à la liste des fichiers disponibles");
-                System.out.println("4. Quitter");
+                System.out.println("4. Supprimer un fichier disponible au téléchargement");
+                System.out.println("5. Quitter");
                 System.out.println("=========================================");
                 System.out.println("Entrez le numéro de l'option choisie :");
 
@@ -193,7 +214,12 @@ public class DownloaderImpl implements Downloader {
                     String pathname = sc.nextLine();
                     System.out.println("\n");
                     AddFiles(pathname, diary, queryingUser);
+                    
                 } else if (option.equals("4")) {
+                    System.out.println("Entrez le nom du fichier à supprimer :");
+                    String fileName = sc.nextLine();
+                    DeleteFile(fileName, diary, queryingUser);
+                } else if (option.equals("5")) {
                     TeteDeMule.daemonRunning = false;
                     
                     System.exit(0);

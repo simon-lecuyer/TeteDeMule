@@ -53,14 +53,16 @@ public class DiaryImpl extends UnicastRemoteObject implements Diary {
      */
     @Override
     public void deleteFileUser(FileUser file, String user)  throws RemoteException {
+        System.out.println("Suppression de : " + file.getFileName());
         ArrayList<String> remainingUsers = diary.get(file.getFileName());
         remainingUsers.remove(user);
-        if (remainingUsers.isEmpty()) {
+        if (remainingUsers.size() == 1) {
             diary.remove(file.getFileName());
             fileInfo.remove(file);
         } else {
             diary.put(file.getFileName(), remainingUsers);
         }
+        System.out.println(getAllFiles());
     }
 
     /** Get all the users who get fileName available
