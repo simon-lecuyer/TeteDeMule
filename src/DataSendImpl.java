@@ -1,11 +1,11 @@
 
 
 public class DataSendImpl implements DataSend {
-    private FileUser file;
-    private int sizeSlot;
-    private int slot;
-    private int offset;
-    private String targetUser;
+    private FileUser file; // the file to send
+    private int sizeSlot; // size  of the fragment
+    private int slot; // number of the fragment
+    private int offset; // offset of the file
+    private String targetUser; // the user to ask the fragment
     
     /** Construct the Data to parse between the Downloader and Daemon
      * 

@@ -9,9 +9,9 @@ import java.util.Scanner;
 
 public class DiaryImpl extends UnicastRemoteObject implements Diary {
 
-    HashMap<String, ArrayList<String>> diary;
-    ArrayList<String> connectedUsers;
-    ArrayList<FileUser> fileInfo;
+    HashMap<String, ArrayList<String>> diary; // The diary stores <FileName, [clients]>
+    ArrayList<String> connectedUsers; // To store the connected users to the diary
+    ArrayList<FileUser> fileInfo; // Store information of files in the diary
 
     public DiaryImpl() throws RemoteException {
         this.diary = new HashMap<>();
@@ -19,6 +19,12 @@ public class DiaryImpl extends UnicastRemoteObject implements Diary {
         fileInfo = new ArrayList<>();
     }
 
+    
+    /** Add the file and its user associated
+     * 
+     * @param file the FileUser to add in the diary
+     * @param user the user with the file available
+     */
     @Override
     public void addFileUser(FileUser file, String user) throws RemoteException {
         if (!connectedUsers.contains(user)) {
@@ -40,6 +46,11 @@ public class DiaryImpl extends UnicastRemoteObject implements Diary {
         }
     }
 
+    /** Delete the user from the list associated with file. Remove the file from diary if nobody left
+     * 
+     * @param file the file associated
+     * @param user user to delete
+     */
     @Override
     public void deleteFileUser(FileUser file, String user)  throws RemoteException {
         ArrayList<String> remainingUsers = diary.get(file.getFileName());
@@ -52,6 +63,10 @@ public class DiaryImpl extends UnicastRemoteObject implements Diary {
         }
     }
 
+    /** Get all the users who get fileName available
+     * 
+     * @param fileName the file to retrieve the users
+     */
     @Override
     public ArrayList<String> getFileUsers(String fileName) throws RemoteException {
 
@@ -70,6 +85,9 @@ public class DiaryImpl extends UnicastRemoteObject implements Diary {
         return usersString;
     }
 
+    /** Get all files name from diary
+     * 
+     */
     @Override
     public ArrayList<String> getAllFiles() throws RemoteException {
         ArrayList<String> allFiles = new ArrayList<>();
@@ -79,6 +97,10 @@ public class DiaryImpl extends UnicastRemoteObject implements Diary {
         return allFiles;
     }
 
+    /** delete user from diary
+     * 
+     * @param user user leaving the diary
+     */
     @Override
     public void userLeaves(String user) throws RemoteException {
         connectedUsers.remove(user);
@@ -101,6 +123,9 @@ public class DiaryImpl extends UnicastRemoteObject implements Diary {
         }
     }
 
+    /** Get the byte size of fileName
+    * @param fileName the file to get size
+    */
     @Override
     public int getFileSize(String fileName) throws RemoteException {
         FileUser dummy = new FileUserImpl("Dummy", 0);
@@ -112,9 +137,11 @@ public class DiaryImpl extends UnicastRemoteObject implements Diary {
         System.out.println("Bienvenue dans l'annuaire de Tête de Mule");
         System.out.println("=========================================");
         System.out.println("Entrez votre adresse pour démarrer l'annuaire de Tête de Mule :");
+        
         Scanner sc = new Scanner(System.in);
         String address = sc.nextLine();
         Boolean diaryNotInitialized = true;
+
         while (diaryNotInitialized) {
             try {
                 

@@ -33,33 +33,6 @@ public class TeteDeMule {
 
     public static void main(String[] args) throws Exception {
         try {
-            // String userId = args[0];
-            // String diaryName = args[1];
-            // Diary diary = (Diary)Naming.lookup(diaryName+":4000/diary");
-            // System.out.println("Diary found : " + diaryName +":4000/diary");
-
-            // int serverPort = Integer.parseInt(args[2]);
-            // String user = userId + ":" + serverPort;
-            
-            // ServerSocket ss = new ServerSocket(serverPort);
-
-
-            // //% Add the user and its files available
-            // File dir = new File("../Available");
-            // File[] files = dir.listFiles();
-            // for (File file : files) {
-            //     FileUser newFile = new FileUserImpl(file.getName(), (int)file.length());
-            //     diary.addFileUser(newFile, user);
-            // }
-            
-            // //% Print all the files available to download
-            // for (String file : diary.getAllFiles()) {
-            //     System.out.println("- " + file);
-            //     System.out.println(diary.getFileUsers(file));
-            // }
-            // System.out.println("\n");
-
-            
 
             System.out.println(" _____    _            _       __  __      _     \n" + //
                            "|_   _|__| |_ ___   __| |___  |  \\/  |_  _| |___ \n" + //
@@ -81,12 +54,8 @@ public class TeteDeMule {
 
             diary = (Diary)Naming.lookup("//" + diaryName+":4000/diary");
 
-
-            if (Files.notExists(Paths.get("../Available"))) {
-                Files.createDirectory(Paths.get("../Available"));
-            }
-
           
+
             System.out.println("Entrez le port du serveur :");
 
             String serverPort = sc.nextLine();
@@ -99,17 +68,22 @@ public class TeteDeMule {
             System.out.println("Server Socket créé\n");
         
 
-
+            //% Check if the directory of available files exists 
+            if (Files.notExists(Paths.get("../Available"))) {
+                Files.createDirectory(Paths.get("../Available"));
+            }
             AddFiles("../Available", diary, user);
 
 
             //% The main thread for the client to download, see all files, ...
             Thread runDownloader = new Thread(() -> {
                 System.out.println("Downloader Thread running");
+
+                //! Changed the constructor with diary to do not lookup twice in the Registry
                 new DownloaderImpl(user, diary);
             });
 
-            //% When the user disconnect, to leave the diary
+            //% When the user disconnect, to leave the diary and stop de Daemon 
             Runtime.getRuntime().addShutdownHook(new Thread() {
                 @Override
                 public void run() {
@@ -125,6 +99,7 @@ public class TeteDeMule {
 
             runDownloader.start();
 
+            //% Start the Daemon to upload fragment when solliciting
             while (daemonRunning) {
                 new DaemonImpl(ss.accept()).start();
             }
@@ -136,7 +111,6 @@ public class TeteDeMule {
         } catch (IOException e) {
             System.out.println("Server port erreur");
         }
-        
         catch (Exception e) {
             e.printStackTrace();
         }        
