@@ -15,4 +15,4 @@
     - Optionnel : créer un dossier *Download/* pour récupérer les fichiers à télécharger (est créé automatiquement s'il n'existe pas)
 - Se place dans dans le dossier bin : *TeteDeMule/bin/* :
     - Exécuter la commande : `java DiaryImpl <nom du Diary>`, initialise le Diary sur le port 4000 --> **/name:4000/diary**
-    - Dans un nouveau terminal : `java TeteDeMule`, lance l'application pour le client. l'utilisateur doit rentrer ensuite : le *nom du diary* et le *port de communication*. L'utilisateur est représenté par son *hostname*. Dans le Diary l'utilisateur est stocké :  **albator.enseeiht.fr:port**
+    - Dans un nouveau terminal : `java TeteDeMule`, lance l'application pour le client. l'utilisateur doit rentrer ensuite : le *nom du diary* et le *port de communication*. L'utilisateur est représenté par son *hostname*. Dans le Diary l'utilisateur est stocké :  **ip:port**

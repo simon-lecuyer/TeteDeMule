@@ -44,7 +44,7 @@ public class TeteDeMule {
         
             Scanner sc = new Scanner(System.in);
 
-            //% the name of the user, working only on N7, getHostAddress to get the IP
+            //% the ip of the user, working with computer on N7, getHostName to get the hostname
             String userId = InetAddress.getLocalHost().getHostAddress();
 
 
