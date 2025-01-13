@@ -9,24 +9,10 @@
     - Permettre le téléchargement fragmenté des fichiers
     - Télécharger un fichier depuis les clients
 
-## Structure du projet
-- Deamon (interface) : sur chaque client permmettant le téléchargement de fragment, accessible par socket
-    - > public interface Daemon extends Remote {
-      >
-      >     public byte[] upload(String fileName, int fragmentBegin, int fragmentSize) throws Remote Exception;
-      > }
-    
-- Downloader (interface) : sur les clients souhaitant télécharger en parallèle des fichiers
-    - > public interace Downloader {
-      > 
-      >     public void download(String fileName, int fragmentSize);
-      > }
-
-- Diary (interface) : l'annuaire, accessible par RMI, permet d'enregister les fichiers des clients connectés
-    - > public interface Diary extends Remote {
-      > 
-      >     public void createFile(String fileName, String username) throws RemoteException; 
-      >     public void updateFile(String fileName, String[] usernames) throws RemoteException;
-      >     public String[] getFileUsers(String fileName) throws Remote Exception;
-      >     public void deleteFileUsers(String fileName, String[] usernames) throws RemoteException;
-      > }
+## Lancement d'un projet
+- A la racine *TeteDeMule/* : 
+    - Créer un dossiser *Available/* et mettre les fichiers à disposition de téléchargement (est créé vide automatiquement au lancement de TeteDeMule)
+    - Optionnel : créer un dossier *Download/* pour récupérer les fichiers à télécharger (est créé automatiquement s'il n'existe pas)
+- Se place dans dans le dossier bin : *TeteDeMule/bin/* :
+    - Exécuter la commande : `java DiaryImpl <nom du Diary>`, initialise le Diary sur le port 4000 --> **/name:4000/diary**
+    - Dans un nouveau terminal : `java TeteDeMule`, lance l'application pour le client. l'utilisateur doit rentrer ensuite : le *nom du diary* et le *port de communication*. L'utilisateur est représenté par son *hostname*. Dans le Diary l'utilisateur est stocké :  **albator.enseeiht.fr:port**
