@@ -66,7 +66,9 @@ public class DaemonImpl extends Thread implements Daemon {
 
         } catch (IOException e) {
             System.out.println("IOException occured in daemon: " + e.getMessage());
-        } 
+        } catch (ClassNotFoundException e) {
+            System.out.println("Reception error from : " + e.getMessage());
+        }
         catch (Exception e) {
             e.printStackTrace();
         } 

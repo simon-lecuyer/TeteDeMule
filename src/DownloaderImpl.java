@@ -195,38 +195,45 @@ public class DownloaderImpl implements Downloader {
 
                 System.out.println("=========================================\n");
 
-                if (option.equals("1")) {
-                    ListFiles(diary);
-                } else if (option.equals("2")) {
-                    System.out.println("Entrez le nom du fichier à télécharger :");
-                    String fileName = sc.nextLine();
-                    ArrayList<String> allFiles = diary.getAllFiles();
-                    if (allFiles != null){
-                        if (allFiles.contains(fileName)){
-                            download(fileName);
-                        } else{
-                            System.out.println("Erreur, le Diary ne contient pas le fichier : " + fileName + "\n");
-                        } 
-                    } else{
-                        System.out.println("Aucun fichier dans le Diary, impossible de télécharger\n");
-                    } 
-                    
-                } else if (option.equals("3")) {
-                    System.out.println("Entrez le chemin du dossier à ajouter :");
-                    String pathname = sc.nextLine();
-                    System.out.println("\n");
-                    AddFiles(pathname, diary, queryingUser);
-                    
-                } else if (option.equals("4")) {
-                    System.out.println("Entrez le nom du fichier à supprimer :");
-                    String fileName = sc.nextLine();
-                    DeleteFile(fileName, diary, queryingUser);
-                } else if (option.equals("5")) {
-                    TeteDeMule.daemonRunning = false;
-                    
-                    System.exit(0);
-                } else {
-                    System.out.println("Option invalide");
+                switch (option) {
+                    case "1":
+                        ListFiles(diary);
+                        break;
+                    case "2":
+                        {
+                            System.out.println("Entrez le nom du fichier à télécharger :");
+                            String fileName = sc.nextLine();
+                            ArrayList<String> allFiles = diary.getAllFiles();
+                            if (allFiles != null){
+                                if (allFiles.contains(fileName)){
+                                    download(fileName);
+                                } else{
+                                    System.out.println("Erreur, le Diary ne contient pas le fichier : " + fileName + "\n");
+                                }
+                            } else{
+                                System.out.println("Aucun fichier dans le Diary, impossible de télécharger\n");
+                            }       break;
+                        }
+                    case "3":
+                        System.out.println("Entrez le chemin du dossier à ajouter :");
+                        String pathname = sc.nextLine();
+                        System.out.println("\n");
+                        AddFiles(pathname, diary, queryingUser);
+                        break;
+                    case "4":
+                        {
+                            System.out.println("Entrez le nom du fichier à supprimer :");
+                            String fileName = sc.nextLine();
+                            DeleteFile(fileName, diary, queryingUser);
+                            break;
+                        }
+                    case "5":
+                        TeteDeMule.daemonRunning = false;
+                        
+                        System.exit(0);
+                    default:
+                        System.out.println("Option invalide");
+                        break;
                 }
             } 
             
