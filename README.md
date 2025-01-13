@@ -9,6 +9,10 @@
     - Permettre le téléchargement fragmenté des fichiers
     - Télécharger un fichier depuis les clients
 
+## Feature du projet
+- Téléchargement parallèle avec les Threads
+- Compression de fichier avec `java.util.zip.DeflaterOutputStream` et `java.util.zip.DeflaterInputStream`
+
 ## Lancement d'un projet
 - A la racine *TeteDeMule/* : 
     - Créer un dossiser *Available/* et mettre les fichiers à disposition de téléchargement (est créé vide automatiquement au lancement de TeteDeMule)
