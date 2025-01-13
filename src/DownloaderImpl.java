@@ -174,7 +174,7 @@ public class DownloaderImpl implements Downloader {
 
     public void displayDownload() {
 
-        System.out.println("Bienvenue dans Tête de Mule, " + queryingUser + " !");
+        System.out.println("Bienvenue dans Tête de Mule, " + queryingUser + " !\n");
         
         Scanner sc = new Scanner(System.in);
         try {

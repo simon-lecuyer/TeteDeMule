@@ -44,10 +44,7 @@ public class TeteDeMule {
         
             Scanner sc = new Scanner(System.in);
 
-            System.out.println("Entrez  votre ID :");
-            String userId = sc.nextLine();
-
-            userId = InetAddress.getLocalHost().getHostName();
+            String userId = InetAddress.getLocalHost().getHostName();
 
 
             System.out.println("Entrez le nom du diary :");
