@@ -117,7 +117,7 @@ public class DownloaderImpl implements Downloader {
         try {
             for (String file : diary.getAllFiles()) {
                 System.out.println("- " + file + " : " + diary.getFileSize(file) + " bytes" +(diary.getFileUsers(file).size() > 0 ? " - " + diary.getFileUsers(file).size() + " users" : ""));
-                System.out.println(diary.getFileUsers(file));
+                System.out.println(diary.getFileUsers(file) + "\n");
             }
             System.out.println("\n");
         } catch (Exception e) {
