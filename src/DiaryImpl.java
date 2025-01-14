@@ -56,7 +56,7 @@ public class DiaryImpl extends UnicastRemoteObject implements Diary {
         System.out.println("Suppression de : " + file.getFileName());
         ArrayList<String> remainingUsers = diary.get(file.getFileName());
         remainingUsers.remove(user);
-        if (remainingUsers.size() == 1) {
+        if (remainingUsers.size() == 0) {
             diary.remove(file.getFileName());
             fileInfo.remove(file);
         } else {

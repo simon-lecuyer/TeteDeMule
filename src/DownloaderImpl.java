@@ -160,7 +160,7 @@ public class DownloaderImpl implements Downloader {
             if (allFiles.contains(fileName)) {
                 if (diary.getFileUsers(fileName).contains(user)) {
                     FileUser file = new FileUserImpl(fileName, diary.getFileSize(fileName));
-                    diary.deleteFileUser(file, fileName);
+                    diary.deleteFileUser(file, user);
                     System.out.println("Fichier supprimé : " + fileName);
                 } else {
                     System.out.println("Vous n'avez pas ce fichier à disposition d'envoi");
